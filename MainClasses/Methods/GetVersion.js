@@ -1,6 +1,6 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
 
-class GetVersion {
+class GetVe {
     constructor (url) {
 
         this.url = url
@@ -34,9 +34,19 @@ class GetVersion {
         return this.version
     }
 
-    getRequestBody () {
+    getZabbixRequestBody() {
         return this.requestBody
     }
 }
+
+async function GetVersion(url){
+    let getV = await new GetVe(url)
+    await getV.call()
+    return {
+        getVersionZabbix: await getV.getZabbixVersion(),
+        getRequestBody: await getV.getZabbixRequestBody()
+    }
+}
+
 
 module.exports =  GetVersion

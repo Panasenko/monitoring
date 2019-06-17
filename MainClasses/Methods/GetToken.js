@@ -1,6 +1,6 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
 
-class GetToken {
+class GetT {
     constructor ( url, user, pass) {
 
         this.url = url
@@ -33,5 +33,15 @@ class GetToken {
         throw new Error('Error getting token. Parameter token is undefined')
     }
 }
+
+
+async function GetToken(url, user, password){
+    let GT = await new GetT(url, user, password)
+    await GT.login()
+    return {
+        getTokenAuth: await GT.getToken()
+    }
+}
+
 
 module.exports = GetToken

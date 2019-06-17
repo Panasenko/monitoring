@@ -38,4 +38,13 @@ class Hosts {
     }
 }
 
-module.exports = Hosts
+async function GetHosts(url, token){
+    let hosts = await new Hosts(url, token)
+    await hosts.call()
+    return {
+        getZabbixHostas: await hosts.getHosts()
+    }
+}
+
+
+module.exports = GetHosts
