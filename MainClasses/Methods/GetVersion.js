@@ -1,29 +1,24 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
+const SettingRequest = require('./SettingRequest')
+
 
 class GetVe {
-    constructor(url) {
+    constructor(url, token, params) {
 
         this.url = url
         this.version = null
+        this.token = token
+        this.params = params
         this.method = "apiinfo.version"
-        this.requestBody = {}
 
-    }
-
-    builderRequestBody(params, token) {
-
-        this.requestBody.jsonrpc = 2.0
-        this.requestBody.method = this.method
-        this.requestBody.id = 1
-        this.requestBody.auth = (token !== undefined) ? token : null
-        this.requestBody.params = (params !== undefined) ? params : {}
-
-        return this.requestBody
     }
 
     //Получение версии забикаса
-    async call() {
-        let newobj = new CallZabbixAPI(this.url, this.builderRequestBody())
+    async call( ) {
+
+        let SettingReq = new SettingRequest().setParams(this.method, this.token, this.params)
+
+        let newobj = new CallZabbixAPI(this.url, SettingReq)
         let result = await newobj.call()
         this.version = result.data.result
     }
@@ -40,8 +35,8 @@ class GetVe {
     }
 }
 
-async function GetVersion(url) {
-    let getV = await new GetVe(url)
+async function GetVersion(url, token, params) {
+    let getV = await new GetVe(url, token, params)
     await getV.call()
     return {
         getVersionZabbix: await getV.getZabbixVersion(),

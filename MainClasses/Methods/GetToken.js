@@ -1,31 +1,20 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
+const SettingRequest = require('./SettingRequest')
 
 class GetT {
-    constructor(url, user, pass) {
+    constructor(url, token, params) {
 
         this.url = url
-        this.token = null
-        this.user = user
-        this.pass = pass
+        this.token = token
         this.method = "user.login"
-        this.requestBody = {}
-    }
-
-    builderRequestBody(user, password) {
-        this.requestBody.jsonrpc = 2.0
-        this.requestBody.method = this.method
-        this.requestBody.id = 1
-        this.requestBody.auth = (this.token !== undefined) ? this.token : null
-        this.requestBody.params = (user !== undefined && password !== undefined) ? {
-            user,
-            password
-        } : new Error('Login or password is undefined')
-        return this.requestBody
+        this.params = params
     }
 
     //Получение версии забикаса
     async login() {
-        let newobj = new CallZabbixAPI(this.url, this.builderRequestBody(this.user, this.pass))
+        let sr = new SettingRequest().setParams(this.method, this.token, this.params)
+
+        let newobj = new CallZabbixAPI(this.url, sr)
         let result = await newobj.call()
         this.token = result.data.result
     }
@@ -39,8 +28,8 @@ class GetT {
 }
 
 
-async function GetToken(url, user, password) {
-    let GT = await new GetT(url, user, password)
+async function GetToken(url, token, params) {
+    let GT = await new GetT(url, token, params)
     await GT.login()
     return {
         getTokenAuth: await GT.getToken()

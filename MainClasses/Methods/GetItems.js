@@ -1,35 +1,21 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
+const SettingRequest = require('./SettingRequest')
 
 class Items {
-    constructor(url, token, hostids) {
+    constructor(url, token, params) {
 
         this.url = url
         this.token = token
-        this.hostids = hostids
         this.method = "item.get"
         this.items = null
-        this.requestBody = {}
-    }
-
-    builderRequestBody(token, hostids) {
-        let data = {}
-        data.output = "extend"
-        data.hostids = hostids
-        data.search = {"key_": "system"}
-        data.sortfield = "name"
-
-        this.requestBody.jsonrpc = 2.0
-        this.requestBody.method = this.method
-        this.requestBody.id = 1
-        this.requestBody.auth = (token !== undefined) ? token : null
-        this.requestBody.params = data //TODO Написать динамическое изменение параметров для передачи настроек выборки
-
-        return this.requestBody
+        this.params = params
     }
 
     //Получение всех хостов
     async call() {
-        let newobj = new CallZabbixAPI(this.url, this.builderRequestBody(this.token, this.hostids)) //TODO переработкать проверку переданного токена
+        let sr = new SettingRequest().setParams(this.method, this.token, this.params)
+
+        let newobj = new CallZabbixAPI(this.url, sr)
         let result = await newobj.call() //TODO сделать проверку возврата функции
         this.items = result.data.result
     }
@@ -42,8 +28,8 @@ class Items {
     }
 }
 
-async function GetItems(url, token, hostids) {
-    let items = await new Items(url, token, hostids)
+async function GetItems(url, token, params) {
+    let items = await new Items(url, token, params)
     await items.call()
     return {
         getZabbixItems: await items.getItems()

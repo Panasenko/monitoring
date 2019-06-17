@@ -1,31 +1,21 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
+const SettingRequest = require('./SettingRequest')
 
 class HostsG {
-    constructor(url, token) {
+    constructor(url, token, params) {
 
         this.url = url
         this.token = token
         this.method = "hostgroup.get"
         this.hostGroup = null
-        this.requestBody = {}
-    }
-
-    builderRequestBody(token) {
-        let data = {}
-        data.output = "extend"
-
-        this.requestBody.jsonrpc = 2.0
-        this.requestBody.method = this.method
-        this.requestBody.id = 1
-        this.requestBody.auth = (token !== undefined) ? token : null
-        this.requestBody.params = data //TODO Написать динамическое изменение параметров для передачи настроек выборки
-
-        return this.requestBody
+        this.params = params
     }
 
     //Получение всех хостов
     async call() {
-        let newobj = new CallZabbixAPI(this.url, this.builderRequestBody(this.token)) //TODO переработкать проверку переданного токена
+        let sr = new SettingRequest().setParams(this.method, this.token, this.params)
+
+        let newobj = new CallZabbixAPI(this.url, sr)
         let result = await newobj.call() //TODO сделать проверку возврата функции
         this.hostGroup = result.data.result
     }
@@ -38,8 +28,8 @@ class HostsG {
     }
 }
 
-async function HostsGroup(url, token) {
-    let hostsGroup = await new HostsG(url, token)
+async function HostsGroup(url, token, params) {
+    let hostsGroup = await new HostsG(url, token, params)
     await hostsGroup.call()
     return {
         getZabbixHostGroup: await hostsGroup.getHostGroup()
