@@ -1,4 +1,4 @@
-const { GetVersion,  GetToken, GetHosts} = require("./Methods/AllMethods")
+const { GetVersion,  GetToken, GetHosts, GetHostGroup} = require("./Methods/AllMethods")
 
 
 
@@ -10,6 +10,7 @@ const { GetVersion,  GetToken, GetHosts} = require("./Methods/AllMethods")
         this.token = null
         this.version = null
         this.hosts = null
+        this.hostGroup = null
     }
 
      async login() {
@@ -50,6 +51,14 @@ const { GetVersion,  GetToken, GetHosts} = require("./Methods/AllMethods")
                     return this.hosts = await GH.getZabbixHostas
             },
 
+            getHostGroup: async() => {
+                if(this.hostGroup === null){
+                    let HGroup = await GetHostGroup(this.url, this.token)
+                    return this.hostGroup = await HGroup.getZabbixHostGroup
+                }
+                return this.hostGroup
+            },
+
         }
      }
 
@@ -72,7 +81,8 @@ async function main() {
 
     let test4 = await zabbix.methods().getHosts()
     console.log(test4)
-
+    let test5 = await zabbix.methods().getHostGroup()
+    console.log(test5)
 }
 
 main()

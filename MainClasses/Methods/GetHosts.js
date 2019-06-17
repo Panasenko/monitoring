@@ -6,6 +6,7 @@ class Hosts {
         this.url = url
         this.token = token
         this.hosts = null
+        this.method = "host.get"
         this.requestBody = {}
     }
 
@@ -15,10 +16,10 @@ class Hosts {
         data.selectInterfaces = ["interfaceid", "ip"]
 
         this.requestBody.jsonrpc = 2.0
-        this.requestBody.method = "host.get"
+        this.requestBody.method = this.method
         this.requestBody.id = 1
         this.requestBody.auth = ( token !== undefined ) ? token : null
-        this.requestBody.params = data
+        this.requestBody.params = data //TODO Написать динамическое изменение параметров для передачи настроек выборки
 
         return this.requestBody
     }

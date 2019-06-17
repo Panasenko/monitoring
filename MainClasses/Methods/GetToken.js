@@ -7,12 +7,13 @@ class GetT {
         this.token = null
         this.user = user
         this.pass = pass
+        this.method = "user.login"
         this.requestBody = {}
     }
 
     builderRequestBody(user, password){
         this.requestBody.jsonrpc = 2.0
-        this.requestBody.method = "user.login"
+        this.requestBody.method = this.method
         this.requestBody.id = 1
         this.requestBody.auth = ( this.token !== undefined ) ? this.token : null
         this.requestBody.params = ( user !== undefined && password !== undefined ) ? { user, password } : new Error('Login or password is undefined')
@@ -23,7 +24,7 @@ class GetT {
     async login() {
         let newobj = new CallZabbixAPI(this.url, this.builderRequestBody(this.user, this.pass))
         let result = await newobj.call()
-        return this.token = result.data.result
+        this.token = result.data.result
     }
 
     getToken() {

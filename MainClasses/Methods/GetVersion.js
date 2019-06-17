@@ -4,7 +4,8 @@ class GetVe {
     constructor (url) {
 
         this.url = url
-        this.version = ''
+        this.version = null
+        this.method = "apiinfo.version"
         this.requestBody = {}
 
     }
@@ -12,7 +13,7 @@ class GetVe {
     builderRequestBody(params, token){
 
         this.requestBody.jsonrpc = 2.0
-        this.requestBody.method = "apiinfo.version"
+        this.requestBody.method = this.method
         this.requestBody.id = 1
         this.requestBody.auth = ( token !== undefined ) ? token : null
         this.requestBody.params = ( params !== undefined ) ? params : {}
@@ -24,11 +25,11 @@ class GetVe {
     async call() {
         let newobj = new CallZabbixAPI(this.url, this.builderRequestBody())
         let result = await newobj.call()
-        return this.version = result.data.result
+        this.version = result.data.result
     }
 
     getZabbixVersion() {
-        if(this.version === undefined){
+        if(this.version === null || this.version === undefined){
             throw new Error('Error getting version. Parameter version is undefined')
         }
         return this.version
