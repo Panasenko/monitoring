@@ -1,4 +1,4 @@
-const CallZabbixAPI = require('../MainClasses/CallZabbixAPI')
+const CallZabbixAPI = require('../CallZabbixAPI')
 
 class Hosts {
     constructor ( url, token) {
@@ -24,10 +24,10 @@ class Hosts {
     }
 
     //Получение всех хостов
-    async RequestHosts() {
+    async call() {
         let newobj = new CallZabbixAPI(this.url, this.builderRequestBody(this.token))
         let result = await newobj.call()
-        return this.hosts = result.data.result
+        this.hosts = result.data.result
     }
 
     getHosts() {
@@ -39,15 +39,3 @@ class Hosts {
 }
 
 module.exports = Hosts
-/*
-
-
-async function main () {
-    const api = new Hosts('http://192.168.0.103/zabbix/api_jsonrpc.php', '946d902bba58f6d63183fc0d444481b2')
-    let result = await api.RequestHosts()
-   //console.log(result)
-    console.log(    api.getHosts()    )
-}
-
-main()
-*/

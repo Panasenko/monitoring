@@ -1,4 +1,4 @@
-const CallZabbixAPI = require('../MainClasses/CallZabbixAPI')
+const CallZabbixAPI = require('../CallZabbixAPI')
 
 class GetToken {
     constructor ( url, user, pass) {
@@ -27,7 +27,7 @@ class GetToken {
     }
 
     getToken() {
-        if(this.token !== undefined) {
+        if(this.token !== null) {
             return this.token
         }
         throw new Error('Error getting token. Parameter token is undefined')
@@ -35,17 +35,3 @@ class GetToken {
 }
 
 module.exports = GetToken
-
-/*
-
-
-async function main () {
-    const api = new GetToken('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
-    let result = await api.login()
-   // console.log(result)
-    console.log(    api.getToken()    )
-}
-
-main()
-
-*/

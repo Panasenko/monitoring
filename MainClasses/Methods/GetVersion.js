@@ -1,4 +1,4 @@
-const CallZabbixAPI = require('../MainClasses/CallZabbixAPI')
+const CallZabbixAPI = require('../CallZabbixAPI')
 
 class GetVersion {
     constructor (url) {
@@ -21,7 +21,7 @@ class GetVersion {
     }
 
     //Получение версии забикаса
-    async zabbixVersion() {
+    async call() {
         let newobj = new CallZabbixAPI(this.url, this.builderRequestBody())
         let result = await newobj.call()
         return this.version = result.data.result

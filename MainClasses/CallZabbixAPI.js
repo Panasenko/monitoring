@@ -27,14 +27,3 @@ class CallZabbixAPI {
 }
 
 module.exports = CallZabbixAPI
-
-
-/*
-
-async function main () {
-    const api = new CallZabbixAPI('http://192.168.0.103/zabbix/api_jsonrpc.php', {"jsonrpc":"2.0","method":"apiinfo.version","id":1,"auth":null,"params":{}})
-    let result = await api.call()
-    console.log(result)
-}
-
-main()*/
