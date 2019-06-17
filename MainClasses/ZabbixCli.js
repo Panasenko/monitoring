@@ -1,4 +1,4 @@
-const {GetVersion, GetToken, GetHosts, GetHostGroup, GetItems} = require("./Methods/AllMethods")
+const {GetVersion, GetToken, GetHosts, GetHostGroup, GetItems, GetHistory} = require("./Methods/AllMethods")
 
 
 class ZabbixCli {
@@ -11,6 +11,7 @@ class ZabbixCli {
         this.hosts = null
         this.hostGroup = null
         this.items = null
+        this.history = null
     }
 
     async login() {
@@ -67,6 +68,14 @@ class ZabbixCli {
                 return this.items
             },
 
+            getHistory: async (items) => {
+                if (this.history === null) {
+                    let hist = await GetHistory(this.url, this.token, items)
+                    return this.history = await hist.getZabbixHistory
+                }
+                return this.history
+            },
+
         }
     }
 
@@ -91,8 +100,12 @@ async function main() {
     //console.log(test5)
 
 
-    */
+
     let test1 = await zabbix.methods().getItems(10084)
+    console.log(test1)
+*/
+
+    let test1 = await zabbix.methods().getHistory(23296)
     console.log(test1)
 
 

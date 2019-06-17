@@ -4,4 +4,5 @@ module.exports = {
     GetVersion: require('./GetVersion'),
     GetHostGroup: require('./GetHostGroup'),
     GetItems: require('./GetItems'),
+    GetHistory: require('./GetHistory'),
 }
