@@ -1,7 +1,7 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
 
 class GetT {
-    constructor ( url, user, pass) {
+    constructor(url, user, pass) {
 
         this.url = url
         this.token = null
@@ -11,12 +11,15 @@ class GetT {
         this.requestBody = {}
     }
 
-    builderRequestBody(user, password){
+    builderRequestBody(user, password) {
         this.requestBody.jsonrpc = 2.0
         this.requestBody.method = this.method
         this.requestBody.id = 1
-        this.requestBody.auth = ( this.token !== undefined ) ? this.token : null
-        this.requestBody.params = ( user !== undefined && password !== undefined ) ? { user, password } : new Error('Login or password is undefined')
+        this.requestBody.auth = (this.token !== undefined) ? this.token : null
+        this.requestBody.params = (user !== undefined && password !== undefined) ? {
+            user,
+            password
+        } : new Error('Login or password is undefined')
         return this.requestBody
     }
 
@@ -28,7 +31,7 @@ class GetT {
     }
 
     getToken() {
-        if(this.token !== null) {
+        if (this.token !== null) {
             return this.token
         }
         throw new Error('Error getting token. Parameter token is undefined')
@@ -36,7 +39,7 @@ class GetT {
 }
 
 
-async function GetToken(url, user, password){
+async function GetToken(url, user, password) {
     let GT = await new GetT(url, user, password)
     await GT.login()
     return {

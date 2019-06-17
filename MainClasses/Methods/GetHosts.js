@@ -1,7 +1,7 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
 
 class Hosts {
-    constructor ( url, token) {
+    constructor(url, token) {
 
         this.url = url
         this.token = token
@@ -10,7 +10,7 @@ class Hosts {
         this.requestBody = {}
     }
 
-    builderRequestBody( token ){
+    builderRequestBody(token) {
         let data = {}
         data.output = ["hostid", "host"]
         data.selectInterfaces = ["interfaceid", "ip"]
@@ -18,7 +18,7 @@ class Hosts {
         this.requestBody.jsonrpc = 2.0
         this.requestBody.method = this.method
         this.requestBody.id = 1
-        this.requestBody.auth = ( token !== undefined ) ? token : null
+        this.requestBody.auth = (token !== undefined) ? token : null
         this.requestBody.params = data //TODO Написать динамическое изменение параметров для передачи настроек выборки
 
         return this.requestBody
@@ -32,14 +32,14 @@ class Hosts {
     }
 
     getHosts() {
-        if(this.hosts.length > 0) {
+        if (this.hosts.length > 0) {
             return this.hosts
         }
         throw new Error('Hosts are not found')
     }
 }
 
-async function GetHosts(url, token){
+async function GetHosts(url, token) {
     let hosts = await new Hosts(url, token)
     await hosts.call()
     return {

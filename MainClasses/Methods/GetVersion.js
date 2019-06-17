@@ -1,7 +1,7 @@
 const CallZabbixAPI = require('../CallZabbixAPI')
 
 class GetVe {
-    constructor (url) {
+    constructor(url) {
 
         this.url = url
         this.version = null
@@ -10,13 +10,13 @@ class GetVe {
 
     }
 
-    builderRequestBody(params, token){
+    builderRequestBody(params, token) {
 
         this.requestBody.jsonrpc = 2.0
         this.requestBody.method = this.method
         this.requestBody.id = 1
-        this.requestBody.auth = ( token !== undefined ) ? token : null
-        this.requestBody.params = ( params !== undefined ) ? params : {}
+        this.requestBody.auth = (token !== undefined) ? token : null
+        this.requestBody.params = (params !== undefined) ? params : {}
 
         return this.requestBody
     }
@@ -29,7 +29,7 @@ class GetVe {
     }
 
     getZabbixVersion() {
-        if(this.version === null || this.version === undefined){
+        if (this.version === null || this.version === undefined) {
             throw new Error('Error getting version. Parameter version is undefined')
         }
         return this.version
@@ -40,7 +40,7 @@ class GetVe {
     }
 }
 
-async function GetVersion(url){
+async function GetVersion(url) {
     let getV = await new GetVe(url)
     await getV.call()
     return {
@@ -50,4 +50,4 @@ async function GetVersion(url){
 }
 
 
-module.exports =  GetVersion
+module.exports = GetVersion
