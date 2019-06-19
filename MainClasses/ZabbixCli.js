@@ -1,4 +1,4 @@
-const {GetVersion, GetToken, GetHosts, GetHostGroup, GetItems, GetHistory} = require("./Methods/AllMethods")
+const {GetVersion, GetToken, GetHosts, GetHostGroup, GetItems, GetHistory, GetGraph} = require("./Methods/ExportsMethods")
 
 
 class ZabbixCli {
@@ -12,6 +12,7 @@ class ZabbixCli {
         this.hostGroup = null
         this.items = null
         this.history = null
+        this.graphs = null
     }
 
     async login() {
@@ -63,7 +64,7 @@ class ZabbixCli {
             getItems: async (hostid) => {
 
                 let params = {
-                    output: "extend",
+                    output: ["hostid", "itemid", "name"],
                     hostids: hostid,
                     search: {"key_": "system"},
                     sortfield: "name"
@@ -94,6 +95,20 @@ class ZabbixCli {
                 return this.history
             },
 
+            getGraphics: async () => {
+
+                let params = {
+                    output: "extend",
+                    hostids: 10084,
+                    sortfield: "name"
+                }
+                if (this.graphs === null) {
+                    let GG = await GetGraph(this.url, this.token, params)
+                    return this.graphs = await GG.getGraphZabbix
+                }
+                return this.graphs
+            },
+
         }
     }
 
@@ -102,11 +117,11 @@ class ZabbixCli {
 
 
 async function main() {
-    let zabbix = await new ZabbixCli('http://192.168.0.101/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
+    let zabbix = await new ZabbixCli('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
     await zabbix.login()
 
 
-    let test = await zabbix.methods().getItems(10084)
+    let test = await zabbix.methods().getGraphics()
     console.log(test)
 
 

@@ -5,4 +5,5 @@ module.exports = {
     GetHostGroup: require('./GetHostGroup'),
     GetItems: require('./GetItems'),
     GetHistory: require('./GetHistory'),
+    GetGraph: require('./GetGraph'),
 }
