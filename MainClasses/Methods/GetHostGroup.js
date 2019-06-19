@@ -2,18 +2,16 @@ const CallZabbixAPI = require('../CallZabbixAPI')
 const SettingRequest = require('./SettingRequest')
 
 class HostsG {
-    constructor(url, token, params) {
-
+    constructor(url, token) {
         this.url = url
         this.token = token
         this.method = "hostgroup.get"
         this.hostGroup = null
-        this.params = params
     }
 
     //Получение всех хостов
-    async call() {
-        let sr = new SettingRequest().setParams(this.method, this.token, this.params)
+    async call(params) {
+        let sr = new SettingRequest().setParams(this.method, this.token, params)
 
         let newobj = new CallZabbixAPI(this.url, sr)
         let result = await newobj.call() //TODO сделать проверку возврата функции
@@ -29,8 +27,8 @@ class HostsG {
 }
 
 async function HostsGroup(url, token, params) {
-    let hostsGroup = await new HostsG(url, token, params)
-    await hostsGroup.call()
+    let hostsGroup = await new HostsG(url, token)
+    await hostsGroup.call(params)
     return {
         getZabbixHostGroup: await hostsGroup.getHostGroup()
     }

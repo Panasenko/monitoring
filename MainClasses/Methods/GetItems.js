@@ -2,18 +2,17 @@ const CallZabbixAPI = require('../CallZabbixAPI')
 const SettingRequest = require('./SettingRequest')
 
 class Items {
-    constructor(url, token, params) {
+    constructor(url, token) {
 
         this.url = url
         this.token = token
         this.method = "item.get"
         this.items = null
-        this.params = params
     }
 
     //Получение всех хостов
-    async call() {
-        let sr = new SettingRequest().setParams(this.method, this.token, this.params)
+    async call(params) {
+        let sr = new SettingRequest().setParams(this.method, this.token, params)
 
         let newobj = new CallZabbixAPI(this.url, sr)
         let result = await newobj.call() //TODO сделать проверку возврата функции
@@ -29,8 +28,8 @@ class Items {
 }
 
 async function GetItems(url, token, params) {
-    let items = await new Items(url, token, params)
-    await items.call()
+    let items = await new Items(url, token)
+    await items.call(params)
     return {
         getZabbixItems: await items.getItems()
     }

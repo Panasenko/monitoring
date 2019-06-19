@@ -120,12 +120,11 @@ class ZabbixCli {
 async function main() {
     let zabbix = await new ZabbixCli('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
     await zabbix.login()
-    let test = await zabbix.methods().getToken()
+    let test = await zabbix.methods().getHosts()
     console.log(test)
 
-   /* let test1 = await zabbix.methods().getItems()
+    let test1 = await zabbix.methods().getToken()
     console.log(test1)
-*/
 }
 
 main()

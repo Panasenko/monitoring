@@ -2,18 +2,17 @@ const CallZabbixAPI = require('../CallZabbixAPI')
 const SettingRequest = require('./SettingRequest')
 
 class Hosts {
-    constructor(url, token, params) {
+    constructor(url, token) {
 
         this.url = url
         this.token = token
         this.hosts = null
         this.method = "host.get"
-        this.params = params
-    }
+     }
 
     //Получение всех хостов
-    async call() {
-        let sr = new SettingRequest().setParams(this.method, this.token, this.params)
+    async call(params) {
+        let sr = new SettingRequest().setParams(this.method, this.token, params)
 
         let newobj = new CallZabbixAPI(this.url, sr)
         let result = await newobj.call()
@@ -29,8 +28,8 @@ class Hosts {
 }
 
 async function GetHosts(url, token, params) {
-    let hosts = await new Hosts(url, token, params)
-    await hosts.call()
+    let hosts = await new Hosts(url, token)
+    await hosts.call(params)
     return {
         getZabbixHostas: await hosts.getHosts()
     }

@@ -2,17 +2,16 @@ const CallZabbixAPI = require('../CallZabbixAPI')
 const SettingRequest = require('./SettingRequest')
 
 class GetT {
-    constructor(url, token, params) {
+    constructor(url, token) {
 
         this.url = url
         this.token = token
         this.method = "user.login"
-        this.params = params
     }
 
     //Получение версии забикаса
-    async login() {
-        let sr = new SettingRequest().setParams(this.method, this.token, this.params)
+    async call(params) {
+        let sr = new SettingRequest().setParams(this.method, this.token, params)
 
         let newobj = new CallZabbixAPI(this.url, sr)
         let result = await newobj.call()
@@ -29,8 +28,8 @@ class GetT {
 
 
 async function GetToken(url, token, params) {
-    let GT = await new GetT(url, token, params)
-    await GT.login()
+    let GT = await new GetT(url, token)
+    await GT.call(params)
     return {
         getTokenAuth: await GT.getToken()
     }

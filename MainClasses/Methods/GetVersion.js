@@ -3,20 +3,19 @@ const SettingRequest = require('./SettingRequest')
 
 
 class GetVe {
-    constructor(url, token, params) {
+    constructor(url, token) {
 
         this.url = url
         this.version = null
         this.token = token
-        this.params = params
         this.method = "apiinfo.version"
 
     }
 
     //Получение версии забикаса
-    async call( ) {
+    async call( params ) {
 
-        let SettingReq = new SettingRequest().setParams(this.method, this.token, this.params)
+        let SettingReq = new SettingRequest().setParams(this.method, this.token, params)
 
         let newobj = new CallZabbixAPI(this.url, SettingReq)
         let result = await newobj.call()
@@ -30,17 +29,13 @@ class GetVe {
         return this.version
     }
 
-    getZabbixRequestBody() {
-        return this.requestBody
-    }
 }
 
 async function GetVersion(url, token, params) {
-    let getV = await new GetVe(url, token, params)
-    await getV.call()
+    let getV = await new GetVe(url, token)
+    await getV.call(params)
     return {
-        getVersionZabbix: await getV.getZabbixVersion(),
-        getRequestBody: await getV.getZabbixRequestBody()
+        getVersionZabbix: await getV.getZabbixVersion()
     }
 }
 
