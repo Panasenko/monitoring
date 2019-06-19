@@ -65,7 +65,8 @@ class ZabbixCli {
 
                 let params = {
                     output: ["hostid", "itemid", "name"],
-                    hostids: hostid,
+                    graphid: 808,
+                    hostids: 10084,
                     search: {"key_": "system"},
                     sortfield: "name"
                 }
@@ -98,7 +99,7 @@ class ZabbixCli {
             getGraphics: async () => {
 
                 let params = {
-                    output: "extend",
+                    output: ["graphid", "name"],
                     hostids: 10084,
                     sortfield: "name"
                 }
@@ -119,12 +120,12 @@ class ZabbixCli {
 async function main() {
     let zabbix = await new ZabbixCli('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
     await zabbix.login()
-
-
-    let test = await zabbix.methods().getGraphics()
+    let test = await zabbix.methods().getToken()
     console.log(test)
 
-
+   /* let test1 = await zabbix.methods().getItems()
+    console.log(test1)
+*/
 }
 
 main()
