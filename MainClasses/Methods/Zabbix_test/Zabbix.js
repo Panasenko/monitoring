@@ -18,10 +18,10 @@ class Zabbix {
             }
 
 
-            let newToken = new Token(this._url, params)
-            await newToken.token()
+            let newToken = await new Token(this._url, params)
+           // await newToken.token
 
-            console.log(this._token)
+            console.log(newToken)
         }
         return this._token
     }

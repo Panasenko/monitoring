@@ -13,11 +13,13 @@ class Token extends Zabbix {
         this._token = value
     }
 
-    async token() {
-        if(this._token === null){
+    get token() {
+  /*      if(this._token === null){
             return super.token =  this.token = await this.call()
+
+            //return super.token =  this.token = await this.call()
             //return super.token = this.token
-        }
+        }*/
         return this._token
     }
 
