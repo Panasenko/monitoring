@@ -16,7 +16,6 @@ class RequestBuilder {
     }
 
     build(method, token, params) {
-
         if (method === undefined|| params === undefined) {
             throw new Error("The parameter \"method\" or \"params\" is undefined.")
         }
