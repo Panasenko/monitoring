@@ -1,4 +1,4 @@
-const Zabbix = require('./Zabbix')
+const Zabbix = require('./MainMethod')
 
 class HostsGroup extends Zabbix {
     constructor(url, token) {
@@ -31,29 +31,10 @@ class HostsGroup extends Zabbix {
         this._url = value
     }
 
-    async call(params) {
+    async get(params) {
         this.hostgroup = await super.callAPI(this.url, this.method, this.token, params)
     }
 
 }
 
 module.exports = HostsGroup
-
-
-async function main() {
-
-    let newToken = await new HostsGroup('http://192.168.0.103/zabbix/api_jsonrpc.php', "3248abc7d381a0d3b0210012ac607638")
-
-    let params = {
-        output: "extend"
-    }
-
-    await newToken.call(params)
-    console.log(newToken.hostgroup)
-
-
-
-}
-
-main()
-

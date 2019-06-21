@@ -1,6 +1,6 @@
 const CallAPI = require("../Service/CallAPI")
 
-class Zabbix {
+class MainMethod {
     constructor(url, token) {
         this._url = url
         this._token = token
@@ -30,4 +30,4 @@ class Zabbix {
 
 }
 
-module.exports = Zabbix
+module.exports = MainMethod

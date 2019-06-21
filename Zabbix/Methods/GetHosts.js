@@ -1,4 +1,4 @@
-const Zabbix = require('./Zabbix')
+const Zabbix = require('./MainMethod')
 
 class GetHosts extends Zabbix {
     constructor(url, token) {
@@ -31,33 +31,10 @@ class GetHosts extends Zabbix {
         this._url = value
     }
 
-    async call(params) {
+    async get(params) {
         this.host = await super.callAPI(this.url, this.method, this.token, params)
     }
 
 }
 
 module.exports = GetHosts
-
-/*
-
-async function main() {
-
-    let newToken = await new GetHosts('http://192.168.0.103/zabbix/api_jsonrpc.php', "3248abc7d381a0d3b0210012ac607638")
-
-    let params = {
-        output: ["hostid", "host"],
-        selectInterfaces: ["interfaceid", "ip"]
-    }
-
-
-    await newToken.call(params)
-    console.log(newToken.host)
-
-
-
-}
-
-main()
-
-*/

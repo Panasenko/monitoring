@@ -1,4 +1,4 @@
-const Zabbix = require('./Zabbix')
+const Zabbix = require('./MainMethod')
 
 class GetVersion extends Zabbix {
     constructor(url, token) {
@@ -31,26 +31,10 @@ class GetVersion extends Zabbix {
         this._url = value
     }
 
-    async call(params) {
-        this.version = await super.callAPI(this.url, this.method, this.token, params)
+    async get(params = {}) {
+        return this.version = await super.callAPI(this.url, this.method, this.token, params)
     }
 
 }
 
 module.exports = GetVersion
-
-
-async function main() {
-
-    let newToken = await new GetVersion('http://192.168.0.103/zabbix/api_jsonrpc.php', null)
-
-    let params = {}
-
-    await newToken.call(params)
-    console.log(newToken.version)
-
-
-}
-
-main()
-
