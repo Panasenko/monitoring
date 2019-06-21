@@ -1,7 +1,9 @@
 const {GetVersion, GetToken, GetHosts} = require("./Service/ExportsClass")
+const Errors = require("./Service/Errors")
 
-class ZabbixAPI {
-    constructor(url, user, pass) {
+class ZabbixAPI extends Errors{
+    constructor(url, user, pass){
+        super()
         this._url = url
         this._user = user
         this._pass = pass
@@ -21,9 +23,7 @@ class ZabbixAPI {
         this._token = value
     }
     get version() {
-        if(this._version === null){
-            throw new Error("version is not create")
-        }
+        Errors.valid(this._version, "version is not create") //TODO Починить валидатор
         return this._version
     }
     set version(value) {
@@ -56,7 +56,6 @@ class ZabbixAPI {
         }
 
         let GH = await GetHosts(this.url, this.token)
-        return this.hosts = await GH.getZabbixHostas
 
     }
 
@@ -67,7 +66,7 @@ class ZabbixAPI {
 async function main() {
     let z = await new ZabbixAPI('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
     let test = await z.login()
-   console.log(await z.getVersion({}))
+   console.log(await z.version)
 
 }
 
