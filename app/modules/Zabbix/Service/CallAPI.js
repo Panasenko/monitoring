@@ -14,10 +14,9 @@ class CallAPI extends Errors{
     }
 
     async call(method, token, params) {
-
         try {
             return await axios({
-                baseURL: this._url,
+                baseURL: this.url,
                 method: 'post',
                 headers: {
                     Accept: 'application/json',

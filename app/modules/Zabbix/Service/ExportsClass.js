@@ -1,4 +1,7 @@
 module.exports = Requered = {
+
+    MeainMethod: require('../Methods/MainMethod'),
+
     GetToken: require('../Methods/GetToken'),
     GetGraph: require('../Methods/GetGraph'),
     GetHistory: require('../Methods/GetHistory'),
@@ -6,4 +9,5 @@ module.exports = Requered = {
     GetHosts: require('../Methods/GetHosts'),
     GetItems: require('../Methods/GetItems'),
     GetVersion: require('../Methods/GetVersion'),
+
 }
