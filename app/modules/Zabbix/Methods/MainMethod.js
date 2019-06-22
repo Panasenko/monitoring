@@ -1,12 +1,17 @@
-const CallAPI = require("../Service/CallAPI")
+'use strict'
 
-class MainMethod {
+const CallAPI = require("../Service/CallAPI")
+const Errors = require("../Service/Errors")
+
+class MainMethod extends Errors{
     constructor(url, token) {
+        super()
         this._url = url
         this._token = token
     }
 
     get token() {
+        Errors.valid(this._token, this.constructor.name, "get token")
         return this._token
     }
 
@@ -15,6 +20,7 @@ class MainMethod {
     }
 
     get url() {
+        Errors.valid(this._token, this.constructor.name, "get token")
         return this._url
     }
 

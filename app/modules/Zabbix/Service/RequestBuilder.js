@@ -2,6 +2,7 @@ const Errors = require("./Errors")
 
 class RequestBuilder extends Errors {
 
+
     static build(method, token, params) {
         Errors.valid(method, this.constructor.name, "build")
 
@@ -18,9 +19,14 @@ class RequestBuilder extends Errors {
             auth: token,
             params: params,
             jsonrpc: 2.0,
-            id: 1 //TODO написать динамически изменяемую функцию
+            id: this.generationId()
         }
     }
+
+    static generationId() {
+        return Math.floor(Math.random() * (10000 - 1))
+    }
+
 }
 
 module.exports = RequestBuilder

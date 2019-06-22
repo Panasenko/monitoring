@@ -19,6 +19,8 @@ class ZabbixAPI extends Errors{
         this._graphs = null
     }
 
+
+//Блок авторизации. Получение токена
     get token() {
         Errors.valid(this._token, this.constructor.name, "token")
         return this._token
@@ -26,14 +28,6 @@ class ZabbixAPI extends Errors{
     set token(value) {
         this._token = value
     }
-    get version() {
-        Errors.valid(this._version, this.constructor.name, "version")
-        return this._version
-    }
-    set version(value) {
-        this._version = value
-    }
-
     async login() {
         let params = {
             user: this._user,
@@ -46,11 +40,18 @@ class ZabbixAPI extends Errors{
         this.token = await gv.get(params)
     }
 
+//Блок работы с методом получения версии АПИ Zabbix
+    get version() {
+        Errors.valid(this._version, this.constructor.name, "version")
+        return this._version
+    }
+    set version(value) {
+        this._version = value
+    }
     async getVersion(params){
         let gv = await new GetVersion(this._url, null)
-        return this._version = await gv.get({})
+        return this.version = await gv.get({})
     }
-
 
     async getHosts(params = paras){
         let paras = {
@@ -58,24 +59,19 @@ class ZabbixAPI extends Errors{
             selectInterfaces: ["interfaceid", "ip"]
         }
 
-        if(this._url === undefined || this._url === null){
-            throw new Error("Function getHosts is undefined or null")
-        }
+        Errors.valid(params, this.constructor.name, "getHosts")
 
         let GH = await GetHosts(this.url, this.token)
-
     }
-
-
 }
 
 
 async function main() {
     let z = await new ZabbixAPI('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
     let test = await z.login()
-    //await z.getVersion({})
-  // console.log("vers " + z.version)
-    console.log("vers " + z.token)
+    await z.getVersion({})
+  console.log("vers " + z.version)
+    //console.log("vers " + z.token)
 
 }
 
