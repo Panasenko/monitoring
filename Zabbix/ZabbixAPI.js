@@ -23,7 +23,7 @@ class ZabbixAPI extends Errors{
         this._token = value
     }
     get version() {
-        Errors.valid(this._version, "version is not create") //TODO Починить валидатор
+        Errors.valid(this._version)
         return this._version
     }
     set version(value) {
@@ -31,10 +31,13 @@ class ZabbixAPI extends Errors{
     }
 
     async login() {
-        let params = { //TODO сделать проверку передаваемых параметров
+        let params = {
             user: this._user,
             password: this._pass
         }
+
+        Errors.valid(params)
+
         let gv = await new GetToken(this._url, null)
         this.token = await gv.get(params)
     }
@@ -66,7 +69,9 @@ class ZabbixAPI extends Errors{
 async function main() {
     let z = await new ZabbixAPI('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
     let test = await z.login()
-   console.log(await z.version)
+    //await z.getVersion({})
+  // console.log("vers " + z.version)
+    console.log("vers " + z.token)
 
 }
 

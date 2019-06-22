@@ -1,3 +1,5 @@
+const Errors = require("./Errors")
+
 class RequestBuilder {
 
     constructor(params) {
