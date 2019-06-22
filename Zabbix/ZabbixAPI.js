@@ -4,6 +4,9 @@ const Errors = require("./Service/Errors")
 class ZabbixAPI extends Errors{
     constructor(url, user, pass){
         super()
+
+        Errors.valid({url}, this.constructor.name, "Constructor")
+
         this._url = url
         this._user = user
         this._pass = pass
@@ -17,13 +20,14 @@ class ZabbixAPI extends Errors{
     }
 
     get token() {
+        Errors.valid(this._token, this.constructor.name, "token")
         return this._token
     }
     set token(value) {
         this._token = value
     }
     get version() {
-        Errors.valid(this._version)
+        Errors.valid(this._version, this.constructor.name, "version")
         return this._version
     }
     set version(value) {
@@ -36,7 +40,7 @@ class ZabbixAPI extends Errors{
             password: this._pass
         }
 
-        Errors.valid(params)
+        Errors.valid(params, this.constructor.name, "login")
 
         let gv = await new GetToken(this._url, null)
         this.token = await gv.get(params)

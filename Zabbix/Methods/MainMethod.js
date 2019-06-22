@@ -24,7 +24,7 @@ class MainMethod {
 
     async callAPI(url, method, token, params) {
         let new_Obj = new CallAPI(url)
-        let result = await new_Obj.call(url, method, token, params)
+        let result = await new_Obj.call(method, token, params)
         return await result.data.result
     }
 

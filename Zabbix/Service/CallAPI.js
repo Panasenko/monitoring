@@ -1,21 +1,23 @@
 const axios = require('axios')
-const RequestBuilder = require('./RequestBuilder')
+const RB = require('./RequestBuilder')
+const Errors = require("./Errors")
 
-class CallAPI {
+class CallAPI extends Errors{
     constructor(url) {
-        this.url = url
+        super()
+        this._url = url
     }
 
-    async call(url, method, token, params) {
-        if (!params) {
-            throw new Error("params in function callAPI is empty")
-        }
+    get url(){
+        Errors.valid(this._url, this.constructor.name, "get url")
+        return this._url
+    }
 
-        let RB = new RequestBuilder()
+    async call(method, token, params) {
 
         try {
-            let respons = await axios({
-                baseURL: url,
+            return await axios({
+                baseURL: this._url,
                 method: 'post',
                 headers: {
                     Accept: 'application/json',
@@ -24,10 +26,8 @@ class CallAPI {
                 timeout: 40000,
                 retries: 0
             })
-
-            return respons
         } catch (error) {
-            console.error(error)
+            throw new Error(`Class ${this.constructor.name}, method \"call\" - ${error}`)
         }
     }
 }
