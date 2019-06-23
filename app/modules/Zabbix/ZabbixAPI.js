@@ -24,7 +24,7 @@ class ZabbixAPI extends MeainMethod {
     }
 
     //Блок работы с методом получения версии АПИ Zabbix
-    async getVersion(params) {
+    async getVersion() {
         let gv = await new GetVersion(this.url, null)
         return this.version = await gv.get({})
     }
@@ -123,24 +123,17 @@ class ZabbixAPI extends MeainMethod {
 
 }
 
+module.exports = async (url, token, params) => {
 
-async function main() {
     let z = await new ZabbixAPI('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
-    await z.login()
-    /*console.log("token " + z.token)
- await z.getVersion()
-    console.log("version " + z.version)
-    await z.getHosts()
-    console.log(z.hosts)*/
+    //await z.login()
 
-    /*
-        await z.getHostGroup()
-        console.log(z.hostGroup)
-    */
 
-    await z.getApplications()
-    console.log(z.application)
 
+    //console.log(z.version)
+    return {
+
+        getVersion: await z.getVersion()
+    }
 }
 
-main()

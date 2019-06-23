@@ -1,4 +1,6 @@
 module.exports = {
-    port: '80', //порт
-    dbURI: 'mongodb://localhost/zabbix' //Соединение с БД
+    port: '4000',
+    host: 'localhost',
+    //Соединение с БД
+    dbURI: 'mongodb://localhost/zabbix'
 }

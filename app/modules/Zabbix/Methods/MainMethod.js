@@ -38,7 +38,7 @@ class MainMethod {
     }
 
     get token() {
-        Errors.valid(this._token, this.constructor.name, "get token")
+      //  Errors.valid(this._token, this.constructor.name, "get token")
         return this._token
     }
     set token(value) {
