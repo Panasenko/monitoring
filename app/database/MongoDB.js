@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const config = require('../../config/config')
-let gracefulShutdown
-mongoose.connect(config.dbURI)
+//let gracefulShutdown
+mongoose.connect(config.dbURI, {useNewUrlParser: true})
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function() {
@@ -35,3 +35,4 @@ process.on('SIGINT', function() {
     })
 })
 
+require('./../models/model_Zabbix')

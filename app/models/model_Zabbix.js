@@ -1,15 +1,9 @@
 const mongoose = require('mongoose')
-//TODO: добавить проверку записи в БД, добавлене поддокументов и добавить индексацию по референсам
-const taskZabbixSchema = new mongoose.Schema({
-    "platform": Object,
-    "status": String,
-    "duration": String,
-    "recoveryDate": String,
-    "groups": String,
-    "problem": String,
-    "ip": String,
-    "host": String,
-    "eventId": String
+const AuthZabbixSchema = new mongoose.Schema({
+    "name": String,
+    "discription": String,
+    "url": String,
+    "token": String
 })
 
-mongoose.model('taskZabbixMonitoring', taskZabbixSchema, 'tasks')
+mongoose.model('AuthZabbix', AuthZabbixSchema, 'AuthZabbix')

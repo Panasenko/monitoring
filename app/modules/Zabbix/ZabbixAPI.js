@@ -2,25 +2,17 @@ const {MeainMethod, GetVersion, GetToken, GetHosts, GetHostGroup, GetItems, GetH
 const Errors = require("./Service/Errors")
 
 class ZabbixAPI extends MeainMethod {
-    constructor(url, user, password) {
+    constructor(url) {
         super(url)
-        this.user = user
-        this.password = password
         Errors.valid({url}, this.constructor.name, "Constructor")
     }
 
 
     //Блок авторизации
-    async login() {
-        let params = {
-            user: this.user,
-            password: this.password
-        }
-
+    async login(params) {
         Errors.valid(params, this.constructor.name, "login")
-
         let gv = await new GetToken(this.url, null)
-        this.token = await gv.get(params)
+        return this.token = await gv.get(params)
     }
 
     //Блок работы с методом получения версии АПИ Zabbix
@@ -123,16 +115,10 @@ class ZabbixAPI extends MeainMethod {
 
 }
 
-module.exports = async (url, token, params) => {
-
-    let z = await new ZabbixAPI('http://192.168.0.103/zabbix/api_jsonrpc.php', 'Admin', 'zabbix')
-    //await z.login()
-
-
-
-    //console.log(z.version)
+module.exports = async (url, params, token) => {
+    let z = await new ZabbixAPI(url)
     return {
-
+        auth: await z.login(params),
         getVersion: await z.getVersion()
     }
 }
