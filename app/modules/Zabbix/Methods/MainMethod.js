@@ -13,10 +13,32 @@ class MainMethod {
         this._items = null
         this._history = null
         this._graphs = null
+        this._application = null
+        this._graphitem = null
+
+    }
+
+    get graphitem() {
+        console.log(this._graphitem)
+        Errors.valid(this._graphitem, this.constructor.name, "get graphitem")
+        return this._graphitem
+    }
+
+    set graphitem(value) {
+        this._graphitem = value
+    }
+
+    get application() {
+        Errors.valid(this._application, this.constructor.name, "get application")
+        return this._application
+    }
+
+    set application(value) {
+        this._application = value
     }
 
     get token() {
-        //Errors.valid(this._token, this.constructor.name, "get token")
+        Errors.valid(this._token, this.constructor.name, "get token")
         return this._token
     }
     set token(value) {

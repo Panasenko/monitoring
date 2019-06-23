@@ -1,4 +1,4 @@
-const {MeainMethod, GetVersion, GetToken, GetHosts, GetHostGroup, GetItems, GetHistory, GetGraph} = require("./Service/ExportsClass")
+const {MeainMethod, GetVersion, GetToken, GetHosts, GetHostGroup, GetItems, GetHistory, GetGraph, GetApp, GetGraphItem} = require("./Service/ExportsClass")
 const Errors = require("./Service/Errors")
 
 class ZabbixAPI extends MeainMethod {
@@ -95,6 +95,32 @@ class ZabbixAPI extends MeainMethod {
         return this.graphs = await GG.get(params)
     }
 
+    //Блок получения доступных элементов графиков
+    async getGraphItems() {
+        let params = {
+            output: "extend",
+            expandData: 1,
+            graphids: "528"
+        }
+
+        Errors.valid(params, this.constructor.name, "getGraphItems")
+        let GGI = await new GetGraphItem(this.url, this.token, params)
+        return this.graphitem = await GGI.get(params)
+    }
+
+    //Блок получения доступных приложений
+    async getApplications() {
+        let params = {
+            output: "extend",
+            sortfield: "name",
+            groupids: 4
+        }
+
+        Errors.valid(params, this.constructor.name, "getApplications")
+        let GA = await new GetApp(this.url, this.token, params)
+        return this.application = await GA.get(params)
+    }
+
 }
 
 
@@ -112,8 +138,8 @@ async function main() {
         console.log(z.hostGroup)
     */
 
-    await z.getGraphics()
-    console.log(z.graphs)
+    await z.getApplications()
+    console.log(z.application)
 
 }
 
