@@ -3,8 +3,7 @@ const AuthZabbixSchema = new mongoose.Schema({
     "name": String,
     "discription": String,
     "url": String,
-    "token": String,
-    "hash": String
+    "token": String
 })
 
 mongoose.model('AuthZabbix', AuthZabbixSchema, 'AuthZabbix')

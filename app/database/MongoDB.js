@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
-const config = require('../../config/config')
+
 //let gracefulShutdown
 mongoose.connect(config.dbURI, {useNewUrlParser: true})
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function() {
-    console.log('Mongoose connected to ' + config.dbURI)
+    console.log('Mongoose connected to ' + process.env.DB_URL)
 })
 mongoose.connection.on('error', function(err) {
     console.log('Mongoose connection error: ' + err)

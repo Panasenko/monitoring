@@ -1,13 +1,22 @@
-const express = require('express')
-const router = express.Router()
-
-const control_Zabbix = require('../controllers/controller_Zabbix')
-
-//Получение версии заббикса
-router.post('/getVersion', control_Zabbix.getVersionZabbix)
-
-router.post('/auth', control_Zabbix.authenticate)
+//const control_Zabbix = require('../controllers/controller_Zabbix')
+const CryptoJS = require("crypto-js");
+const routeArr = []
 
 
 
-module.exports = router
+    let optionsRout = {}
+    optionsRout.method = 'POST'
+    optionsRout.path = '/'
+    optionsRout.handler = (request, h) => {
+
+       console.log(CryptoJS.sha1("Message", process.env.S_KEY)); //TODO исправить проблему с криптографией
+
+        return request.payload
+    }
+
+routeArr.push(optionsRout)
+
+
+
+
+module.exports = routeArr

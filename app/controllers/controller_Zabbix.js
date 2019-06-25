@@ -2,26 +2,14 @@ const mongoose = require('mongoose')
 const Model_Aurh = mongoose.model('AuthZabbix')
 const v = require('validator')
 const _ = require('Lodash')
-const crypto = require('crypto')
 const zabbixAPI = require('./../modules/Zabbix/ZabbixAPI')
-const config = require('../../config/config')
+
 
 
 const sendJSONresponse = (res, status, content) => {
     res.status(status)
     res.json(content)
 }
-
-const createHash = (user, pass, url) => {
-
-    let secret = config.skey
-    let algorithm = 'sha1'
-
-    let hmac = crypto.createHmac(algorithm, secret)
-    hmac.update(`${user}${pass}${url}`)
-    return hmac.digest('hex')
-}
-
 
 module.exports.getVersionZabbix = async (req, res) => {
 
