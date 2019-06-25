@@ -1,47 +1,46 @@
-const {MeainMethod, GetVersion, GetToken, GetHosts, GetHostGroup, GetItems, GetHistory, GetGraph, GetApp, GetGraphItem} = require("./Service/ExportsClass")
-const Errors = require("./Service/Errors")
+const Errors = require("./Errors")
+const MainMethod = require('./MainMethod')
 
-class ZabbixAPI extends MeainMethod {
-    constructor(url) {
-        super(url)
+class ZabbixAPI extends MainMethod{
+    constructor(url, token) {
+        super(url, token)
         Errors.valid({url}, this.constructor.name, "Constructor")
+    }
+
+    async call(method, params){
+        return await super.callAPI(this.url, this.token, method, params)
     }
 
 
     //Блок авторизации
     async login(params) {
         Errors.valid(params, this.constructor.name, "login")
-        let gv = await new GetToken(this.url, null)
-        return this.token = await gv.get(params)
+        return this.token = await this.call("user.login", params)
     }
 
     //Блок работы с методом получения версии АПИ Zabbix
-    async getVersion() {
-        let gv = await new GetVersion(this.url, null)
-        return this.version = await gv.get({})
+    async getVersion(params) {
+        return this.version = await this.call("apiinfo.version", params)
     }
-
     //Блок получения доступных хостов
-    async getHosts() {
-        let params = {
+    async getHosts(params) {
+        params = {
             output: ["hostid", "host"],
             selectInterfaces: ["interfaceid", "ip"]
         }
 
         Errors.valid(params, this.constructor.name, "getHosts")
-
-        let GH = await new GetHosts(this.url, this.token)
-        return this.hosts = await GH.get(params)
+        return this.hosts = await this.call("host.get", params)
     }
 
     //Блок получения доступных хостов групп
-    async getHostGroup() {
-        let params = {
+    async getHostGroup(params) {
+        params = {
             output: "extend"
         }
         Errors.valid(params, this.constructor.name, "getHostGroup")
-        let GHG = await new GetHostGroup(this.url, this.token, params)
-        return this.hostGroup = await GHG.get(params)
+        return this.hostGroup = await this.call("hostgroup.get", params)
+
     }
 
     //Блок получения доступных хостов групп
@@ -54,13 +53,12 @@ class ZabbixAPI extends MeainMethod {
             sortfield: "name"
         }
         Errors.valid(params, this.constructor.name, "getItems")
-        let GI = await new GetItems(this.url, this.token, params)
-        return this.items = await GI.get(params)
+        return this.items = await this.call("item.get", params)
     }
 
     //Блок получения истории по элементам данных
-    async getHistory() {
-        let params = {
+    async getHistory(params) {
+        params = {
             output: "extend",
             itemids: 23296,
             history: 0,
@@ -70,34 +68,34 @@ class ZabbixAPI extends MeainMethod {
         }
 
         Errors.valid(params, this.constructor.name, "getHistory")
-        let GH = await new GetHistory(this.url, this.token, params)
-        return this.history = await GH.get(params)
+    return this.history = await this.call("history.get", params)
+
     }
 
     //Блок получения доступных графиков
-    async getGraphics() {
-        let params = {
+    async getGraphics(params) {
+        params = {
             output: ["graphid", "name"],
             hostids: 10084,
             sortfield: "name"
         }
 
         Errors.valid(params, this.constructor.name, "getGraphics")
-        let GG = await new GetGraph(this.url, this.token, params)
-        return this.graphs = await GG.get(params)
+        return this.graphs = await this.call("graph.get", params)
+
     }
 
     //Блок получения доступных элементов графиков
-    async getGraphItems() {
-        let params = {
+    async getGraphItems(params) {
+        params = {
             output: "extend",
             expandData: 1,
             graphids: "528"
         }
 
         Errors.valid(params, this.constructor.name, "getGraphItems")
-        let GGI = await new GetGraphItem(this.url, this.token, params)
-        return this.graphitem = await GGI.get(params)
+        return this.graphitem = await this.call("graphitem.get", params)
+
     }
 
     //Блок получения доступных приложений
@@ -109,11 +107,12 @@ class ZabbixAPI extends MeainMethod {
         }
 
         Errors.valid(params, this.constructor.name, "getApplications")
-        let GA = await new GetApp(this.url, this.token, params)
-        return this.application = await GA.get(params)
+        return this.graphitem = await this.call("application.get", params)
+
     }
 
 }
+/*
 
 module.exports = async (url, params, token) => {
     let z = await new ZabbixAPI(url)
@@ -122,4 +121,12 @@ module.exports = async (url, params, token) => {
         getVersion: await z.getVersion()
     }
 }
+*/
 
+async function main() {
+    let result = await new ZabbixAPI("http://192.168.0.101/zabbix/api_jsonrpc.php", null)
+    console.log(await result.login({user: "Admin", password: "zabbix"}))
+    console.log(await result.getApplications())
+}
+
+main()

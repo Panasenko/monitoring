@@ -2,18 +2,19 @@ const axios = require('axios')
 const RB = require('./RequestBuilder')
 const Errors = require("./Errors")
 
-class CallAPI extends Errors{
+class CallAPI extends Errors {
     constructor(url) {
         super()
         this._url = url
     }
 
-    get url(){
+    get url() {
         Errors.valid(this._url, this.constructor.name, "get url")
         return this._url
     }
 
     async call(method, token, params) {
+
         try {
             return await axios({
                 baseURL: this.url,

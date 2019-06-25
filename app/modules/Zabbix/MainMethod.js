@@ -1,7 +1,7 @@
 'use strict'
 
-const CallAPI = require("../Service/CallAPI")
-const Errors = require("../Service/Errors")
+const CallAPI = require("./CallAPI")
+const Errors = require("./Errors")
 
 class MainMethod {
     constructor(url, token) {
@@ -15,11 +15,9 @@ class MainMethod {
         this._graphs = null
         this._application = null
         this._graphitem = null
-
     }
 
     get graphitem() {
-        console.log(this._graphitem)
         Errors.valid(this._graphitem, this.constructor.name, "get graphitem")
         return this._graphitem
     }
@@ -38,68 +36,79 @@ class MainMethod {
     }
 
     get token() {
-      //  Errors.valid(this._token, this.constructor.name, "get token")
+        //  Errors.valid(this._token, this.constructor.name, "get token")
         return this._token
     }
+
     set token(value) {
         this._token = value
     }
+
     get url() {
         Errors.valid(this._url, this.constructor.name, "get url")
         return this._url
     }
+
     set url(value) {
         this._url = value
     }
+
     get version() {
         Errors.valid(this._version, this.constructor.name, "version")
         return this._version
     }
+
     set version(value) {
         this._version = value
     }
-    get hosts(){
+
+    get hosts() {
         Errors.valid(this._hosts, this.constructor.name, "get host")
         return this._hosts
     }
-    set hosts(value){
+
+    set hosts(value) {
         this._hosts = value
     }
 
-    get hostGroup(){
+    get hostGroup() {
         Errors.valid(this._hostGroup, this.constructor.name, "get hostGroup")
         return this._hostGroup
     }
-    set hostGroup(value){
+
+    set hostGroup(value) {
         this._hostGroup = value
     }
 
-    get items(){
+    get items() {
         Errors.valid(this._items, this.constructor.name, "get items")
         return this._items
     }
-    set items(value){
+
+    set items(value) {
         this._items = value
     }
 
-    get history(){
+    get history() {
         Errors.valid(this._history, this.constructor.name, "get history")
         return this._history
     }
-    set history(value){
+
+    set history(value) {
         this._history = value
     }
 
-    get graphs(){
+    get graphs() {
         Errors.valid(this._graphs, this.constructor.name, "get graphs")
         return this._graphs
     }
-    set graphs(value){
+
+    set graphs(value) {
         this._graphs = value
     }
 
 
-    async callAPI(url, method, token, params) {
+    async callAPI(url, token, method,  params) {
         let new_Obj = new CallAPI(url)
         let result = await new_Obj.call(method, token, params)
         return await result.data.result
