@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 //let gracefulShutdown
-mongoose.connect(config.dbURI, {useNewUrlParser: true})
+mongoose.connect(process.env.DB_URL, {useNewUrlParser: true})
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function() {

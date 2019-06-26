@@ -1,6 +1,8 @@
 require('dotenv').config()
+require('./app/database/MongoDB')
 const Hapi = require('hapi')
-const routeZabbix = require('./app/routes/routes_Zabbix')
+
+const routeZabbix = require('./app/plagins/zabbix/plagin_zabbix')
 
 const init = async () => {
 
@@ -8,12 +10,12 @@ const init = async () => {
         port: process.env.PORT,
         host: process.env.HOST
     })
-
-    server.route(routeZabbix)
+    await server.register(routeZabbix)
 
     await server.start()
     console.log('Server running on %s', server.info.uri)
 }
+
 
 process.on('unhandledRejection', (err) => {
 
