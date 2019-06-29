@@ -112,21 +112,5 @@ class ZabbixAPI extends MainMethod{
     }
 
 }
-/*
 
-module.exports = async (url, params, token) => {
-    let z = await new ZabbixAPI(url)
-    return {
-        auth: await z.login(params),
-        getVersion: await z.getVersion()
-    }
-}
-*/
-
-async function main() {
-    let result = await new ZabbixAPI("http://192.168.0.101/zabbix/api_jsonrpc.php", null)
-    console.log(await result.login({user: "Admin", password: "zabbix"}))
-    console.log(await result.getApplications())
-}
-
-main()
+module.exports = ZabbixAPI
