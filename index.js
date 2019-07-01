@@ -1,8 +1,8 @@
 require('dotenv').config()
 require('./app/database/MongoDB')
 const Hapi = require('hapi')
-
-const routeZabbix = require('./app/plagins/zabbix/plagin_zabbix')
+const { graphqlHapi, graphiqlHapi } = require('apollo-server-hapi')
+const schema = require('./app/graphql/schems')
 
 const init = async () => {
 
@@ -10,10 +10,42 @@ const init = async () => {
         port: process.env.PORT,
         host: process.env.HOST
     })
-    await server.register(routeZabbix)
 
-    await server.start()
-    console.log('Server running on %s', server.info.uri)
+
+    await server.register({
+        plugin: graphqlHapi,
+        options: {
+            path: '/graphql',
+            graphqlOptions: {
+                schema: schema,
+            },
+            route: {
+                cors: true,
+            },
+        },
+    })
+
+    await server.register({
+        plugin: graphiqlHapi,
+        options: {
+            path: '/graphiql',
+            route: {
+                cors: true,
+            },
+            graphiqlOptions: {
+                endpointURL: 'graphql',
+            },
+        },
+    })
+
+
+    try {
+        await server.start()
+    } catch (err) {
+        console.log(`Error while starting server: ${err.message}`)
+    }
+
+    console.log(`Server running at: ${server.info.uri}`)
 }
 
 
