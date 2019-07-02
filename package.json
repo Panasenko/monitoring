@@ -4,17 +4,23 @@
   "private": true,
   "scripts": {
     "start": "node index.js",
-    "watch": "nodemon index.js"
+    "watch": "nodemon index.js",
+    "dev": "backpack"
   },
   "dependencies": {
     "@hapi/joi": "^15.1.0",
+    "apollo-server-hapi": "1.3.6",
     "axios": "^0.19.0",
+    "backpack-core": "^0.8.4",
+    "bluebird": "^3.5.5",
     "crypto-js": "^3.1.9-1",
     "debug": "~2.6.9",
     "dotenv": "^8.0.0",
+    "graphql": "^14.4.1",
     "hapi": "^18.1.0",
     "lodash": "^4.17.11",
     "mongoose": "^5.6.1",
+    "redis": "^2.8.0",
     "validator": "^11.0.0"
   }
 }
