@@ -1,10 +1,19 @@
+import * as bluebird from "bluebird"
+
 require('dotenv').config()
-require('./app/database/MongoDB')
+require('../app/database/MongoDB')
 const Hapi = require('hapi')
 const { graphqlHapi, graphiqlHapi } = require('apollo-server-hapi')
-const schema = require('./app/graphql/schems')
+const schema = require('../app/graphql/schems')
+const redis = require('redis')
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype)
+let client = redis.createClient()
+
 
 const init = async () => {
+
+
 
     const server = Hapi.server({
         port: process.env.PORT,
@@ -36,6 +45,17 @@ const init = async () => {
                 endpointURL: 'graphql',
             },
         },
+    })
+
+    server.route({
+        method: 'GET',
+        path:'/',
+        handler: async (request, h) => {
+
+            return await client.getAsync('key1');
+
+
+        }
     })
 
 

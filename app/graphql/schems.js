@@ -11,8 +11,8 @@ let {
 } = require('graphql');
 
 const ZabbixQueryRootType = new GraphQLObjectType({
-    name: "ZabbixAppSchema",
-    description: "Blog Application Schema Query Root",
+    name: "ZabbixQuerySchema",
+    description: "Zabbix Schema Query Root",
     fields: () => ({
         version: {
             type: VersionType,
@@ -60,11 +60,31 @@ const ZabbixQueryRootType = new GraphQLObjectType({
             }
         }
     })
-});
+})
+
+const ZabbixMutationRootType = new GraphQLObjectType({
+    name: "ZabbixMutatuinSchema",
+    description: "Zabbix Schema Mutation Root",
+    fields: () => ({
+        version: {
+            type: VersionType,
+            description: "List of all Authors",
+            args: {url: {type: GraphQLString}},
+            resolve: async (parent, args) => {
+                let vers = args.url
+                return {version: `${vers} test`}
+
+            }
+        }
+
+
+    })
+})
 
 const ZabbixAppSchema = new GraphQLSchema({
-    query: ZabbixQueryRootType
+    query: ZabbixQueryRootType,
+    mutation: ZabbixMutationRootType
 
-});
+})
 
 module.exports = ZabbixAppSchema

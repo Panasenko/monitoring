@@ -3,9 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node index.js",
-    "watch": "nodemon index.js",
-    "dev": "backpack"
+    "start": "backpack",
+    "build": "backpack build"
   },
   "dependencies": {
     "@hapi/joi": "^15.1.0",
