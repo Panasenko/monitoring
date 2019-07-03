@@ -35,4 +35,4 @@ process.on('SIGINT', function() {
     })
 })
 
-require('../plagins/zabbix/models/model_zabbix')
+require('./model_zabbix')

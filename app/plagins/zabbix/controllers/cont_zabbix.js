@@ -3,7 +3,7 @@ const ModelAurh = mongoose.model('AuthZabbix')
 const CryptoJS = require("crypto-js")
 const v = require('validator')
 const _ = require('Lodash')
-const zabbixAPI = require('../../../modules/Zabbix/ZabbixAPI')
+const zabbixAPI = require('../../../../src/modules/Zabbix/ZabbixAPI')
 
 
 function createHash(data) {
