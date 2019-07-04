@@ -3,9 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "backpack",
-    "build": "backpack build"
-  },
+    "start": "nodemon"
+   },
   "dependencies": {
     "@hapi/joi": "^15.1.0",
     "apollo-server-hapi": "2.6.7",
