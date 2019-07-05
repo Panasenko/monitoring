@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const zabbixAPI = require('../modules/Zabbix/ZabbixAPI')
 const mongoose = require('mongoose')
 const ModelAuth = mongoose.model('AuthZabbix')
@@ -7,22 +8,6 @@ module.exports = {
         allZabbix: async (_,args) => {
             return ModelAuth.findOne({"url": args.url})
         },
-
-
-
-        versions: async (obj,args) => {
-
-            console.log(obj,args)
-            let z = await new zabbixAPI(args.url)
-            let vers = await z.getVersion({})
-            return {version: vers}
-        },
-
-
-
-
-
-
 
 
         token: async (_,args) => {
@@ -36,15 +21,18 @@ module.exports = {
         },
         version: async (_,args) => {
 
-            console.log(args)
             let z = await new zabbixAPI(args.url)
             let vers = await z.getVersion({})
             return {version: vers}
         },
         hosts: async (_,args) => {
             let z = await new zabbixAPI(args.url, args.token)
-            let hosts = await z.getHosts()
-            return hosts
+            return await z.getHosts()
+
+        },
+        applications: async (_,args) => {
+            let z = await new zabbixAPI(args.url, args.token)
+            return await z.getApplications({hostids: args.hostid})
         }
     },
     Mutation: {
@@ -63,7 +51,28 @@ module.exports = {
 
             }
         }
+    },
+    AllZabbix:{
+        version: async (parent) => {
+            let z = await new zabbixAPI(parent.url)
+            let vers = await z.getVersion({})
+            return {version: vers}
+        },
+        hosts: async (parent) => {
+            let z = await new zabbixAPI(parent.url, parent.token)
+            let hosts = await z.getHosts()
+            return hosts
+        }
+    },
+    Hosts: {
+        applications: async (parent, args) => {
+            let z = await new zabbixAPI(args.url, args.token)
+            let Apps =  await z.getApplications({hostids: parent.hostid})
+            return _.filter(Apps, a =>a.hostid === parent.hostid)
+        }
     }
+
+
 
 }
 

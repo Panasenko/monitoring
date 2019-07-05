@@ -11,7 +11,6 @@ class ZabbixAPI extends MainMethod{
         return await super.callAPI(this.url, this.token, method, params)
     }
 
-
     //Блок авторизации
     async login(params) {
         Errors.valid(params, this.constructor.name, "login")
@@ -99,15 +98,13 @@ class ZabbixAPI extends MainMethod{
     }
 
     //Блок получения доступных приложений
-    async getApplications() {
+    async getApplications(args) {
         let params = {
-            output: "extend",
-            sortfield: "name",
-            groupids: 4
+            output: ["applicationid","hostid","name"],
+            hostids: args.hostids
         }
-
         Errors.valid(params, this.constructor.name, "getApplications")
-        return this.graphitem = await this.call("application.get", params)
+        return this.application = await this.call("application.get", params)
 
     }
 

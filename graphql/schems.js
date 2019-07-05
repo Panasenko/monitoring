@@ -2,9 +2,9 @@ const RootQuery = `
   type Query {
     allZabbix(url: String!): AllZabbix
     token(url: String!, user: String!, password: String!): Token
-    version(url: String!): Version
-    versions(url: String): Version
+    version(url: String!): [Version]
     hosts(url: String!, token: String!): [Hosts]
+    applications(url: String!, token: String!, hostid: String!): [Applications]
   }  
   
   type AllZabbix {
@@ -12,7 +12,8 @@ const RootQuery = `
     discription: String, 
     url: String, 
     token: String,
-    versions(url: String): Version
+    version(url: String): Version,
+    hosts(url: String, token: String): [Hosts]
   }
 
   type Token {
@@ -25,8 +26,15 @@ const RootQuery = `
         
   type Hosts {
     hostid: String,
-    host: String
-  }  
+    host: String,
+    applications(url: String, token: String, hostid: String): [Applications]
+  } 
+  
+  type Applications {
+    applicationid: String,
+    hostid: String,
+    name: String
+  }
   
 `
 
