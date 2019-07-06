@@ -1,13 +1,13 @@
 const Errors = require("./Errors")
 const MainMethod = require('./MainMethod')
 
-class ZabbixAPI extends MainMethod{
+class ZabbixAPI extends MainMethod {
     constructor(url, token) {
         super(url, token)
         Errors.valid({url}, this.constructor.name, "Constructor")
     }
 
-    async call(method, params){
+    async call(method, params) {
         return await super.callAPI(this.url, this.token, method, params)
     }
 
@@ -18,12 +18,13 @@ class ZabbixAPI extends MainMethod{
     }
 
     //Блок работы с методом получения версии АПИ Zabbix
-    async getVersion(params) {
-        return this.version = await this.call("apiinfo.version", params)
+    async getVersion(args) {
+        return this.version = await this.call("apiinfo.version", args)
     }
+
     //Блок получения доступных хостов
-    async getHosts(params) {
-        params = {
+    async getHosts(args) {
+        let params = {
             output: ["hostid", "host"],
             selectInterfaces: ["interfaceid", "ip"]
         }
@@ -33,9 +34,11 @@ class ZabbixAPI extends MainMethod{
     }
 
     //Блок получения доступных хостов групп
-    async getHostGroup(params) {
-        params = {
-            output: "extend"
+    async getHostGroup(args) {
+        let params = {
+            "output": ["groupid", "name"],
+            "real_hosts": true,
+            "selectHosts": ["hostid", "host", "name", "description", "status"]
         }
         Errors.valid(params, this.constructor.name, "getHostGroup")
         return this.hostGroup = await this.call("hostgroup.get", params)
@@ -43,7 +46,7 @@ class ZabbixAPI extends MainMethod{
     }
 
     //Блок получения доступных хостов групп
-    async getItems() {
+    async getItems(args) {
         let params = {
             output: ["hostid", "itemid", "name"],
             graphid: 808,
@@ -56,8 +59,8 @@ class ZabbixAPI extends MainMethod{
     }
 
     //Блок получения истории по элементам данных
-    async getHistory(params) {
-        params = {
+    async getHistory(args) {
+        let params = {
             output: "extend",
             itemids: 23296,
             history: 0,
@@ -67,13 +70,13 @@ class ZabbixAPI extends MainMethod{
         }
 
         Errors.valid(params, this.constructor.name, "getHistory")
-    return this.history = await this.call("history.get", params)
+        return this.history = await this.call("history.get", params)
 
     }
 
     //Блок получения доступных графиков
-    async getGraphics(params) {
-        params = {
+    async getGraphics(args) {
+        let params = {
             output: ["graphid", "name"],
             hostids: 10084,
             sortfield: "name"
@@ -85,8 +88,8 @@ class ZabbixAPI extends MainMethod{
     }
 
     //Блок получения доступных элементов графиков
-    async getGraphItems(params) {
-        params = {
+    async getGraphItems(args) {
+        let params = {
             output: "extend",
             expandData: 1,
             graphids: "528"
@@ -100,8 +103,9 @@ class ZabbixAPI extends MainMethod{
     //Блок получения доступных приложений
     async getApplications(args) {
         let params = {
-            output: ["applicationid","hostid","name"],
-            hostids: args.hostids
+            output: "extend",
+            hostids: args.hostid,
+            selectItems: ["itemid", "hostid", "name", "key_", "lastclock", "lastns", "lastvalue", "prevvalue"]
         }
         Errors.valid(params, this.constructor.name, "getApplications")
         return this.application = await this.call("application.get", params)

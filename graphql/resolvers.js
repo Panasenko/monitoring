@@ -5,12 +5,10 @@ const ModelAuth = mongoose.model('AuthZabbix')
 
 module.exports = {
     Query: {
-        allZabbix: async (_,args) => {
+        zabbixCli: async (_, args) => {
             return ModelAuth.findOne({"url": args.url})
         },
-
-
-        token: async (_,args) => {
+        token: async (_, args) => {
             let z = await new zabbixAPI(args.url)
             console.log(z)
             let token = await z.login({user: args.user, password: args.password})
@@ -19,18 +17,23 @@ module.exports = {
                 token: token
             }
         },
-        version: async (_,args) => {
+        version: async (_, args) => {
 
             let z = await new zabbixAPI(args.url)
             let vers = await z.getVersion({})
             return {version: vers}
         },
-        hosts: async (_,args) => {
+        hostgroup: async (_, args) => {
+            let z = await new zabbixAPI(args.url, args.token)
+            return await z.getHostGroup()
+
+        },
+        hosts: async (_, args) => {
             let z = await new zabbixAPI(args.url, args.token)
             return await z.getHosts()
 
         },
-        applications: async (_,args) => {
+        applications: async (_, args) => {
             let z = await new zabbixAPI(args.url, args.token)
             return await z.getApplications({hostids: args.hostid})
         }
@@ -52,27 +55,13 @@ module.exports = {
             }
         }
     },
-    AllZabbix:{
-        version: async (parent) => {
-            let z = await new zabbixAPI(parent.url)
-            let vers = await z.getVersion({})
-            return {version: vers}
-        },
-        hosts: async (parent) => {
-            let z = await new zabbixAPI(parent.url, parent.token)
-            let hosts = await z.getHosts()
-            return hosts
-        }
-    },
     Hosts: {
         applications: async (parent, args) => {
             let z = await new zabbixAPI(args.url, args.token)
-            let Apps =  await z.getApplications({hostids: parent.hostid})
-            return _.filter(Apps, a =>a.hostid === parent.hostid)
+            let Apps = await z.getApplications(parent)
+            return _.filter(Apps, a => a.hostid === parent.hostid)
         }
     }
 
 
-
 }
-

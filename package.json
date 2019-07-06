@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon"
-   },
+  },
   "dependencies": {
     "@hapi/joi": "^15.1.0",
     "apollo-server-hapi": "2.6.7",
