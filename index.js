@@ -7,7 +7,7 @@ const resolvers = require('./graphql/resolvers')
 const typeDefs = require('./graphql/schems')
 
 async function StartServer() {
-    const server = new ApolloServer({typeDefs, resolvers});
+    const server = new ApolloServer({typeDefs, resolvers})
 
     const app = new Hapi.server({
         port: process.env.PORT_HAPI || 4000,

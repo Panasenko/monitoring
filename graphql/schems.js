@@ -6,6 +6,7 @@ const RootQuery = `
     hosts(url: String, token: String): [Hosts]
     hostgroup(url: String, token: String): [Hostgroup]
     applications(url: String, token: String): [Applications]
+    graphics(url: String, token: String): [Graphics]
   }  
   
   type ZabbixCli {
@@ -14,6 +15,19 @@ const RootQuery = `
     url: String, 
     token: String
   }
+  
+  type Hostgroup {
+    groupid: String,
+    name: String,
+    hosts: [Hosts]
+    
+  }
+  
+  type Graphics{
+    graphid: String,
+    name: String,
+    items: [Items]
+  }
 
   type Token {
     token: String
@@ -21,13 +35,7 @@ const RootQuery = `
     
   type Version {
     version: String
-  }
-          
-  type Hostgroup {
-    groupid: String,
-    name: String,
-    hosts: [Hosts]
-  }
+  } 
   
   type Hosts {
     hostid: String,
@@ -36,6 +44,7 @@ const RootQuery = `
     description: String,
     status: String,    
     applications(url: String, token: String): [Applications]
+    graphics(url: String, token: String): [Graphics]
   } 
   
   type Applications {
@@ -55,6 +64,8 @@ const RootQuery = `
     lastvalue: String,
     prevvalue: String
   }
+
+  
 
   
 `

@@ -2,9 +2,9 @@ const Errors = require("./Errors")
 const MainMethod = require('./MainMethod')
 
 class ZabbixAPI extends MainMethod {
-    constructor(url, token) {
-        super(url, token)
-        Errors.valid({url}, this.constructor.name, "Constructor")
+    constructor(args) {
+        super(args)
+        Errors.valid(args, this.constructor.name, "Constructor")
     }
 
     async call(method, params) {
@@ -77,9 +77,11 @@ class ZabbixAPI extends MainMethod {
     //Блок получения доступных графиков
     async getGraphics(args) {
         let params = {
-            output: ["graphid", "name"],
-            hostids: 10084,
-            sortfield: "name"
+            "output": ["graphid", "name"],
+            "hostids": args.hostid,
+            "sortfield": "name",
+            "selectItems": ["itemid","hostid","name","key_","lastclock","lastns","lastvalue","prevvalue"],
+            "selectHosts": "hostid"
         }
 
         Errors.valid(params, this.constructor.name, "getGraphics")
@@ -92,7 +94,7 @@ class ZabbixAPI extends MainMethod {
         let params = {
             output: "extend",
             expandData: 1,
-            graphids: "528"
+            graphids: args.graphids
         }
 
         Errors.valid(params, this.constructor.name, "getGraphItems")

@@ -4,9 +4,9 @@ const CallAPI = require("./CallAPI")
 const Errors = require("./Errors")
 
 class MainMethod {
-    constructor(url, token) {
-        this._url = url
-        this._token = token
+    constructor(args) {
+        this._url = args.url
+        this._token = args.token
         this._version = null
         this._hosts = null
         this._hostGroup = null

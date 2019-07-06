@@ -9,7 +9,7 @@ module.exports = {
             return ModelAuth.findOne({"url": args.url})
         },
         token: async (_, args) => {
-            let z = await new zabbixAPI(args.url)
+            let z = await new zabbixAPI(args) //TODO Попробовать вынести объект выше, что бы не создавать много экземпляров
             console.log(z)
             let token = await z.login({user: args.user, password: args.password})
             console.log(token)
@@ -19,27 +19,31 @@ module.exports = {
         },
         version: async (_, args) => {
 
-            let z = await new zabbixAPI(args.url)
+            let z = await new zabbixAPI(args)
             let vers = await z.getVersion({})
             return {version: vers}
         },
         hostgroup: async (_, args) => {
-            let z = await new zabbixAPI(args.url, args.token)
+            let z = await new zabbixAPI(args)
             return await z.getHostGroup()
 
         },
         hosts: async (_, args) => {
-            let z = await new zabbixAPI(args.url, args.token)
+            let z = await new zabbixAPI(args)
             return await z.getHosts()
 
         },
         applications: async (_, args) => {
-            let z = await new zabbixAPI(args.url, args.token)
-            return await z.getApplications({hostids: args.hostid})
+            let z = await new zabbixAPI(args)
+            return await z.getApplications(args)
+        },
+        graphics: async (parent, args) => {
+            let z = await new zabbixAPI(args)
+            return await z.getGraphics(args)
         }
     },
     Mutation: {
-        createZabbixCli: async (_, args) => {
+        createZabbixCli: async (_, args) => { //TODO Добавить проверку наличия записи в БД
             try {
                 let newUser = new ModelAuth({
                     "name": args.name,
@@ -49,17 +53,25 @@ module.exports = {
                 })
 
                 return await newUser.save()
-            } catch (e) {
-                return e
+            } catch (error) {
+                return error
 
             }
         }
     },
     Hosts: {
         applications: async (parent, args) => {
-            let z = await new zabbixAPI(args.url, args.token)
+            let z = await new zabbixAPI(args)
             let Apps = await z.getApplications(parent)
             return _.filter(Apps, a => a.hostid === parent.hostid)
+        },
+
+        graphics: async (parent, args) => {
+            let z = await new zabbixAPI(args)
+            let Apps = await z.getGraphics(parent)
+            return _.filter(Apps, a => a.hosts[0].hostid === parent.hostid)
+
+
         }
     }
 
