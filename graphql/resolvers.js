@@ -40,6 +40,10 @@ module.exports = {
         graphics: async (parent, args) => {
             let z = await new zabbixAPI(args)
             return await z.getGraphics(args)
+        },
+        items: async (parent, args) => {
+            let z = await new zabbixAPI(args)
+            return await z.getItems(args)
         }
     },
     Mutation: {
@@ -70,8 +74,14 @@ module.exports = {
             let z = await new zabbixAPI(args)
             let Apps = await z.getGraphics(parent)
             return _.filter(Apps, a => a.hosts[0].hostid === parent.hostid)
+        },
 
+        items: async (parent, args) => {
+            console.log(parent)
 
+            let z = await new zabbixAPI(args)
+            let Apps = await z.getItems(parent)
+            return _.filter(Apps, a => a.hostid === parent.hostid)
         }
     }
 

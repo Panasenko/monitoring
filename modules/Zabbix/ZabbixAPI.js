@@ -48,11 +48,11 @@ class ZabbixAPI extends MainMethod {
     //Блок получения доступных хостов групп
     async getItems(args) {
         let params = {
-            output: ["hostid", "itemid", "name"],
-            graphid: 808,
-            hostids: 10084,
-            search: {"key_": "system"},
-            sortfield: "name"
+            output: ["itemid", "hostid", "name", "key_","lastclock","lastns","lastvalue","prevvalue"],
+            hostids: args.hostid,
+            sortfield: "name",
+            selectGraphs: ["graphid","name"],
+            selectApplications: ["applicationid", "hostid","name"]
         }
         Errors.valid(params, this.constructor.name, "getItems")
         return this.items = await this.call("item.get", params)
