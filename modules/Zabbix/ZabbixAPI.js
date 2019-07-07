@@ -48,7 +48,7 @@ class ZabbixAPI extends MainMethod {
     //Блок получения доступных хостов групп
     async getItems(args) {
         let params = {
-            output: ["itemid", "hostid", "name", "key_","lastclock","lastns","lastvalue","prevvalue"],
+            output: ["itemid", "hostid","description", "name", "key_","lastclock","lastns","lastvalue","prevvalue"],
             hostids: args.hostid,
             sortfield: "name",
             selectGraphs: ["graphid","name"],

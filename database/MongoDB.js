@@ -36,3 +36,4 @@ process.on('SIGINT', function() {
 })
 
 require('./Models_ZabbixCli')
+require('./Models_Items')
