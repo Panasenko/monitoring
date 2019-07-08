@@ -14,7 +14,21 @@ const AuthZabbixSchema = new mongoose.Schema({
     "token": {
         type: String,
         required: true
-    }
+    },
+    "inProgress": {
+        type: Boolean,
+        default: false
+    },
+    "lastTime": {
+        type: String
+    },
+    "error": {
+        type: Array
+    },
+    "isError": {
+        type: Boolean,
+        default: false
+    },
 })
 
 mongoose.model('AuthZabbix', AuthZabbixSchema, 'ZabbixCli')

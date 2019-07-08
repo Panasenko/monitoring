@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const zabbixAPI = require('../modules/Zabbix/ZabbixAPI')
+const zabbixAPI = require('../modules/Zabbix/zabbixAPI')
 const mongoose = require('mongoose')
 const ZabbixCli = mongoose.model('AuthZabbix')
 const ItemsZabbix = mongoose.model('ItemsZabbix')
@@ -64,7 +64,10 @@ module.exports = {
                     "name": args.name,
                     "description": args.description,
                     "url": args.url,
-                    "token": args.token
+                    "token": args.token,
+                    "inProgress": args.inProgress || false,
+                    "lastTime": args.lastTime || null
+
                 })
 
                 return await newUser.save()
@@ -121,6 +124,11 @@ module.exports = {
             let Apps = await z.getItems(parent)
             return _.filter(Apps, a => a.hostid === parent.hostid)
         }
+    },
+    ZabbixCli: {
+        getItems: async (parent, args) => {
+            return ItemsZabbix.find({"zabbixCli_id": parent._id})
+        },
     }
 
 

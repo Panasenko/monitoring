@@ -62,11 +62,10 @@ class ZabbixAPI extends MainMethod {
     async getHistory(args) {
         let params = {
             output: "extend",
-            itemids: 23296,
+            itemids: args.itemids,
             history: 0,
             sortfield: "clock",
-            sortorder: "DESC",
-            limit: 10
+            sortorder: "DESC"
         }
 
         Errors.valid(params, this.constructor.name, "getHistory")

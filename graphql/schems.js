@@ -19,7 +19,12 @@ const RootQuery = `
     description: String, 
     url: String, 
     token: String,
-    _id: String
+    _id: String,
+    inProgress: Boolean, 
+    lastTime: String,
+    error: [String], 
+    isError: Boolean,
+    getItems(zabbixCli_id: String): [GetItems]
   }
   
   type GetItems{
@@ -27,7 +32,7 @@ const RootQuery = `
     description: String, 
     hostid: String, 
     itemid: String,
-    inProgress: String, 
+    inProgress: Boolean, 
     name: String,
   }
   
@@ -84,30 +89,19 @@ const RootQuery = `
     applications: [Applications],
     graphs: [Graphics]
   }
-
-  
-
-  
 `
 
 const RootMutation = `
   type Mutation {
-    createZabbixCli(name: String!, description: String!, url: String!, token: String!): ZabbixCliMutation
-    updateZabbixCli(name: String!, description: String!, url: String!, token: String!): ZabbixCliMutation
-    deleteZabbixCli(_id: String!): ZabbixCliMutation
+    createZabbixCli(name: String!, description: String!, url: String!, token: String!,inProgress: Boolean, lastTime: String): ZabbixCli
+    updateZabbixCli(name: String!, description: String!, url: String!, token: String!,inProgress: Boolean, lastTime: String, error: [String],isError: Boolean): ZabbixCli
+    deleteZabbixCli(_id: String!): ZabbixCli
     
     createItem(zabbixCli_id: String!, name: String!, hostid: String!, itemid: String!, description: String, inProgress: Boolean): ItemMutation
     updateItem(zabbixCli_id: String!, name: String!, hostid: String!, itemid: String!, description: String, inProgress: Boolean): ItemMutation
     deleteItem(zabbixCli_id: String, name: String, hostid: String, itemid: String, description: String, inProgress: Boolean): ItemMutation
     
   }
-  
-  type ZabbixCliMutation {
-    name: String!
-    description: String!, 
-    url: String!, 
-    token: String!
-}
 
   type ItemMutation {
     zabbixCli_id: String!

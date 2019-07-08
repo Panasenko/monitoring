@@ -21,8 +21,7 @@ const ItemsZabbixSchema = new mongoose.Schema({
     },
     "inProgress": {
         type: Boolean,
-        default: false,
-
+        default: false
     }
 })
 
