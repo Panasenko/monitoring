@@ -1,4 +1,23 @@
 const mongoose = require('mongoose')
+const ItemsSchema = new mongoose.Schema({
+    "name": {
+        type: String,
+        required: true
+    },
+    "hostid": {
+        type: String,
+        required: true
+    },
+    "itemid": {
+        type: String,
+        unique: true,
+        required: true
+    },
+    "description": {
+        type: String
+    }
+})
+
 const AuthZabbixSchema = new mongoose.Schema({
     "name": {
         type: String,
@@ -9,6 +28,7 @@ const AuthZabbixSchema = new mongoose.Schema({
     },
     "url": {
         type: String,
+        unique: true,
         required: true
     },
     "token": {
@@ -29,6 +49,7 @@ const AuthZabbixSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    "items": [ItemsSchema]
 })
 
-mongoose.model('AuthZabbix', AuthZabbixSchema, 'ZabbixCli')
+mongoose.model('ZabbixCli', AuthZabbixSchema, 'ZabbixCli')

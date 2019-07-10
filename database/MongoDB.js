@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
 
 //let gracefulShutdown
-mongoose.connect(process.env.DB_URL, {useNewUrlParser: true})
+mongoose.connect(process.env.DB_URL, {
+    useNewUrlParser: true,
+    useCreateIndex: true
+})
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function() {
@@ -36,4 +39,3 @@ process.on('SIGINT', function() {
 })
 
 require('./Models_ZabbixCli')
-require('./Models_Items')

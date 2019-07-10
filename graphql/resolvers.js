@@ -1,24 +1,13 @@
 const _ = require('lodash')
 const zabbixAPI = require('../modules/Zabbix/zabbixAPI')
 const mongoose = require('mongoose')
-const ZabbixCli = mongoose.model('AuthZabbix')
-const ItemsZabbix = mongoose.model('ItemsZabbix')
+const ZabbixCli = mongoose.model('ZabbixCli')
 
 module.exports = {
     Query: {
-        zabbixCli: async (_, args) => {
-            return ZabbixCli.findOne({"url": args.url})
+        zabbixCliFindById: async (_, args) => {
+            return ZabbixCli.findById(args._id)
         },
-
-
-        getItems: async (_, args) => {
-            return ItemsZabbix.find({"zabbixCli_id": args.zabbixCli_id})
-        },
-        getItem: async (_, args) => {
-            return ItemsZabbix.findOne({"itemid": args.itemid})
-        },
-
-
         token: async (_, args) => {
             let z = await new zabbixAPI(args) //TODO Попробовать вынести объект выше, что бы не создавать много экземпляров
             console.log(z)
@@ -58,7 +47,7 @@ module.exports = {
         }
     },
     Mutation: {
-        createZabbixCli: async (_, args) => { //TODO Добавить проверку наличия записи в БД
+        createZabbixCli: async (_, args) => {
             try {
                 let newUser = new ZabbixCli({
                     "name": args.name,
@@ -67,44 +56,57 @@ module.exports = {
                     "token": args.token,
                     "inProgress": args.inProgress || false,
                     "lastTime": args.lastTime || null
-
                 })
-
                 return await newUser.save()
             } catch (error) {
                 return error
-
             }
         },
         updateZabbixCli: async (_, args) => {
 
         }, //TODO Добавить реализацию обновления
         deleteZabbixCli: async (_, args) => {
-        }, //TODO Добавить реализацию удаления из БД
 
-        createItem: async (_, args) => { //TODO Добавить проверку наличия записи в БД
+            return ZabbixCli.findOneAndDelete({_id: args._id})
+        },
+
+
+        createSubdocItemsZabbixCli: async (_, args) => { //TODO выяснить какого Х добавляются одинаковые элементы без проверки уникальности. Добавить доп проверки
+
             try {
-                let newItems = new ItemsZabbix({
-                    "zabbixCli_id": args.zabbixCli_id,
-                    "name": args.name,
-                    "hostid": args.hostid,
-                    "itemid": args.itemid,
-                    "description": args.description,
-                    "inProgress": args.inProgress
+                let result = await ZabbixCli.findById(args._id)
+
+                await result.items.push({
+                    itemid: args.itemid,
+                    hostid: args.hostid,
+                    name: args.name,
+                    description: args.description
                 })
 
-                return await newItems.save()
-            } catch (error) {
-                return error
 
+                await result.save()
+
+                return await _.last(result.items) //TODO исправить возвращение результата
+
+            } catch (e) {
+                return e
             }
+
         },
-        updateItem: async (_, args) => { //TODO Добавить проверку наличия записи в БД
+        deleteSubdocItemsZabbixCli: async (_, args) => {
 
-        }, //TODO Добавить реализацию обновления
-        deleteItem: async (_, args) => { //TODO Добавить проверку наличия записи в БД
+            try {
+                let result = await ZabbixCli.findById(args._id)
+                let removedItem = await result.items.id(args.child_id).remove()
+                await result.save()
+                return await removedItem
+            } catch (e) {
+                return e
+            }
 
-        } //TODO Добавить реализацию удаления из БД
+        },
+
+
     },
     Hosts: {
         applications: async (parent, args) => {
@@ -124,11 +126,6 @@ module.exports = {
             let Apps = await z.getItems(parent)
             return _.filter(Apps, a => a.hostid === parent.hostid)
         }
-    },
-    ZabbixCli: {
-        getItems: async (parent, args) => {
-            return ItemsZabbix.find({"zabbixCli_id": parent._id})
-        },
     }
 
 

@@ -1,6 +1,7 @@
 const axios = require('axios')
 const _ = require('lodash')
 
+
 class QueryWorker {
     constructor(args) {
         this._zabbixCli_id = args.zabbixCli_id

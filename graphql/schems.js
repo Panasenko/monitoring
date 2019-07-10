@@ -1,9 +1,6 @@
 const RootQuery = `
   type Query {
-    zabbixCli(url: String!): ZabbixCli
-    
-    getItems(zabbixCli_id: String!): [GetItems]
-    getItem(itemid: String!): GetItems
+    zabbixCliFindById(_id: String!): ZabbixCli
     
     token(url: String!, user: String!, password: String!): Token
     version(url: String!): [Version]
@@ -24,18 +21,8 @@ const RootQuery = `
     lastTime: String,
     error: [String], 
     isError: Boolean,
-    getItems(zabbixCli_id: String): [GetItems]
+    items: [String]
   }
-  
-  type GetItems{
-    zabbixCli_id: String,
-    description: String, 
-    hostid: String, 
-    itemid: String,
-    inProgress: Boolean, 
-    name: String,
-  }
-  
   
   type Hosts {
     hostid: String,
@@ -97,20 +84,18 @@ const RootMutation = `
     updateZabbixCli(name: String!, description: String!, url: String!, token: String!,inProgress: Boolean, lastTime: String, error: [String],isError: Boolean): ZabbixCli
     deleteZabbixCli(_id: String!): ZabbixCli
     
-    createItem(zabbixCli_id: String!, name: String!, hostid: String!, itemid: String!, description: String, inProgress: Boolean): ItemMutation
-    updateItem(zabbixCli_id: String!, name: String!, hostid: String!, itemid: String!, description: String, inProgress: Boolean): ItemMutation
-    deleteItem(zabbixCli_id: String, name: String, hostid: String, itemid: String, description: String, inProgress: Boolean): ItemMutation
-    
+    createSubdocItemsZabbixCli(_id: String!, itemid: String!, hostid: String!, name: String!, description: String): SubdocItemsZabbixCli
+    deleteSubdocItemsZabbixCli(_id: String!, child_id: String!): SubdocItemsZabbixCli
+  }
+  
+  type SubdocItemsZabbixCli {
+    _id: String,
+    itemid: String,
+    hostid: String,
+    name: String,
+    description: String
   }
 
-  type ItemMutation {
-    zabbixCli_id: String!
-    name: String!, 
-    hostid: String!, 
-    itemid: String!,
-    description: String, 
-    inProgress: Boolean
-  } 
 
 `
 
