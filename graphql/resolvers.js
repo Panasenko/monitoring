@@ -47,33 +47,32 @@ module.exports = {
         }
     },
     Mutation: {
-        createZabbixCli: async (_, args) => {
+        createZabbixCli: async (_, {input}) => {
             try {
-                let newUser = new ZabbixCli({
-                    "name": args.name,
-                    "description": args.description,
-                    "url": args.url,
-                    "token": args.token,
-                    "inProgress": args.inProgress || false,
-                    "lastTime": args.lastTime || null
-                })
-                return await newUser.save()
+                return await ZabbixCli.create(input)
             } catch (error) {
                 return error
             }
         },
-        updateZabbixCli: async (_, args) => {
-
-        }, //TODO Добавить реализацию обновления
+        updateZabbixCli: async (_, {_id, input}) => {
+            try{
+                return await ZabbixCli.findByIdAndUpdate(_id, input, {new: true})
+            } catch (e) {
+                return e
+            }
+        },
         deleteZabbixCli: async (_, args) => {
-
-            return ZabbixCli.findOneAndDelete({_id: args._id})
+            try {
+                return ZabbixCli.findByIdAndRemove(args._id)
+            } catch (e) {
+                return e
+            }
         },
 
 
-        createSubdocItemsZabbixCli: async (_, args) => { //TODO выяснить какого Х добавляются одинаковые элементы без проверки уникальности. Добавить доп проверки
+        createSubdocItemsZabbixCli: async (_, {_id, input}) => { //TODO выяснить какого Х добавляются одинаковые элементы без проверки уникальности. Добавить доп проверки
 
-            try {
+   /*         try {
                 let result = await ZabbixCli.findById(args._id)
 
                 await result.items.push({
@@ -84,13 +83,27 @@ module.exports = {
                 })
 
 
-                await result.save()
+                return await result.save()
 
-                return await _.last(result.items) //TODO исправить возвращение результата
+            } catch (e) {
+                return e
+            }*/
+
+            try {
+                let result = await ZabbixCli.findById(_id)
+
+                await result.items.push(input)
+
+                let subdoc = await result.items[0]
+
+                 await result.save()
+
+                return subdoc
 
             } catch (e) {
                 return e
             }
+
 
         },
         deleteSubdocItemsZabbixCli: async (_, args) => {

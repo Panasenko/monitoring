@@ -18,6 +18,8 @@ const ItemsSchema = new mongoose.Schema({
     }
 })
 
+mongoose.model('ItemsSchema', ItemsSchema)
+
 const AuthZabbixSchema = new mongoose.Schema({
     "name": {
         type: String,

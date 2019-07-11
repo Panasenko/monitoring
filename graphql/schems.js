@@ -80,12 +80,31 @@ const RootQuery = `
 
 const RootMutation = `
   type Mutation {
-    createZabbixCli(name: String!, description: String!, url: String!, token: String!,inProgress: Boolean, lastTime: String): ZabbixCli
-    updateZabbixCli(name: String!, description: String!, url: String!, token: String!,inProgress: Boolean, lastTime: String, error: [String],isError: Boolean): ZabbixCli
+    createZabbixCli(input: ZabbixCliInput): ZabbixCli
+    updateZabbixCli(_id: String!, input: ZabbixCliInput): ZabbixCli
     deleteZabbixCli(_id: String!): ZabbixCli
     
-    createSubdocItemsZabbixCli(_id: String!, itemid: String!, hostid: String!, name: String!, description: String): SubdocItemsZabbixCli
+    createSubdocItemsZabbixCli(_id: String!, input: SubdocItemsZabbixCliInput): SubdocItemsZabbixCli
     deleteSubdocItemsZabbixCli(_id: String!, child_id: String!): SubdocItemsZabbixCli
+  }
+  
+  input ZabbixCliInput{
+    name: String, 
+    description: String, 
+    url: String, 
+    token: String,
+    _id: String,
+    inProgress: Boolean, 
+    lastTime: String,
+    error: [String], 
+    isError: Boolean
+  }
+  
+  input SubdocItemsZabbixCliInput {
+    itemid: String,
+    hostid: String,
+    name: String,
+    description: String
   }
   
   type SubdocItemsZabbixCli {

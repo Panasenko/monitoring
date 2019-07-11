@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 //let gracefulShutdown
 mongoose.connect(process.env.DB_URL, {
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
 })
 
 // CONNECTION EVENTS
