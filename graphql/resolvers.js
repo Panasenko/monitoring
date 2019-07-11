@@ -9,41 +9,29 @@ module.exports = {
             return ZabbixCli.findById(args._id)
         },
         token: async (_, args) => {
-            let z = await new zabbixAPI(args) //TODO Попробовать вынести объект выше, что бы не создавать много экземпляров
-            console.log(z)
-            let token = await z.login({user: args.user, password: args.password})
-            console.log(token)
+            let token = await zabbixAPI.login(args.url, args.input)
             return {
                 token: token
             }
         },
         version: async (_, args) => {
-
-            let z = await new zabbixAPI(args)
-            let vers = await z.getVersion({})
+            let vers = await zabbixAPI.getVersion(args.url, null, {})
             return {version: vers}
         },
         hostgroup: async (_, args) => {
-            let z = await new zabbixAPI(args)
-            return await z.getHostGroup()
-
+            return await zabbixAPI.getHostGroup(args.url, args.token, args.reqParam)
         },
         hosts: async (_, args) => {
-            let z = await new zabbixAPI(args)
-            return await z.getHosts()
-
+            return await zabbixAPI.getHosts(args.url, args.token, args.reqParam)
         },
         applications: async (_, args) => {
-            let z = await new zabbixAPI(args)
-            return await z.getApplications(args)
+            return await zabbixAPI.getApplications(args.url, args.token, args.reqParam)
         },
         graphics: async (parent, args) => {
-            let z = await new zabbixAPI(args)
-            return await z.getGraphics(args)
+            return await zabbixAPI.getGraphics(args.url, args.token, args.reqParam)
         },
         items: async (parent, args) => {
-            let z = await new zabbixAPI(args)
-            return await z.getItems(args)
+            return await zabbixAPI.getItems(args.url, args.token, args.reqParam)
         }
     },
     Mutation: {
@@ -55,7 +43,7 @@ module.exports = {
             }
         },
         updateZabbixCli: async (_, {_id, input}) => {
-            try{
+            try {
                 return await ZabbixCli.findByIdAndUpdate(_id, input, {new: true})
             } catch (e) {
                 return e
@@ -68,46 +56,18 @@ module.exports = {
                 return e
             }
         },
-
-
         createSubdocItemsZabbixCli: async (_, {_id, input}) => { //TODO выяснить какого Х добавляются одинаковые элементы без проверки уникальности. Добавить доп проверки
-
-   /*         try {
-                let result = await ZabbixCli.findById(args._id)
-
-                await result.items.push({
-                    itemid: args.itemid,
-                    hostid: args.hostid,
-                    name: args.name,
-                    description: args.description
-                })
-
-
-                return await result.save()
-
-            } catch (e) {
-                return e
-            }*/
-
             try {
                 let result = await ZabbixCli.findById(_id)
-
                 await result.items.push(input)
-
                 let subdoc = await result.items[0]
-
-                 await result.save()
-
+                await result.save()
                 return subdoc
-
             } catch (e) {
                 return e
             }
-
-
         },
         deleteSubdocItemsZabbixCli: async (_, args) => {
-
             try {
                 let result = await ZabbixCli.findById(args._id)
                 let removedItem = await result.items.id(args.child_id).remove()
@@ -116,30 +76,20 @@ module.exports = {
             } catch (e) {
                 return e
             }
-
         },
-
-
     },
     Hosts: {
         applications: async (parent, args) => {
-            let z = await new zabbixAPI(args)
-            let Apps = await z.getApplications(parent)
+            let Apps = await zabbixAPI.getApplications(args.url, args.token, parent)
             return _.filter(Apps, a => a.hostid === parent.hostid)
         },
-
         graphics: async (parent, args) => {
-            let z = await new zabbixAPI(args)
-            let Apps = await z.getGraphics(parent)
+            let Apps = await zabbixAPI.getGraphics(args.url, args.token, parent)
             return _.filter(Apps, a => a.hosts[0].hostid === parent.hostid)
         },
-
         items: async (parent, args) => {
-            let z = await new zabbixAPI(args)
-            let Apps = await z.getItems(parent)
+            let Apps = await zabbixAPI.getItems(args.url, args.token, parent)
             return _.filter(Apps, a => a.hostid === parent.hostid)
         }
     }
-
-
 }

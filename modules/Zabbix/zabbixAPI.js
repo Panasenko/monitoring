@@ -1,118 +1,97 @@
 const Errors = require("./Errors")
-const MainMethod = require('./MainMethod')
+const CallAPI = require("./CallAPI")
 
-class ZabbixAPI extends MainMethod {
-    constructor(args) {
-        super(args)
-        Errors.valid(args, this.constructor.name, "Constructor")
+class ZabbixAPI {
+    static async callAPI(url, token, method, params) {
+        let new_Obj = new CallAPI(url)
+        let result = await new_Obj.call(method, token, params)
+        return await result.data.result
     }
 
-    async call(method, params) {
-        return await super.callAPI(this.url, this.token, method, params)
+    static async login(url, reqParam) {
+        Errors.valid(reqParam, this.constructor.name, "login")
+        return await this.callAPI(url, null, "user.login", reqParam)
     }
 
-    //Блок авторизации
-    async login(params) {
-        Errors.valid(params, this.constructor.name, "login")
-        return this.token = await this.call("user.login", params)
+    static async getVersion(url) {
+        return await this.callAPI(url, null, "apiinfo.version", {})
     }
 
-    //Блок работы с методом получения версии АПИ Zabbix
-    async getVersion(args) {
-        return this.version = await this.call("apiinfo.version", args)
-    }
-
-    //Блок получения доступных хостов
-    async getHosts(args) {
+    static async getHosts(url, token, reqParam) {
         let params = {
             output: ["hostid", "host"],
             selectInterfaces: ["interfaceid", "ip"]
         }
-
         Errors.valid(params, this.constructor.name, "getHosts")
-        return this.hosts = await this.call("host.get", params)
+        return await this.callAPI(url, token, "host.get", params)
     }
 
-    //Блок получения доступных хостов групп
-    async getHostGroup(args) {
+    static async getHostGroup(url, token, reqParam) {
         let params = {
             "output": ["groupid", "name"],
             "real_hosts": true,
             "selectHosts": ["hostid", "host", "name", "description", "status"]
         }
         Errors.valid(params, this.constructor.name, "getHostGroup")
-        return this.hostGroup = await this.call("hostgroup.get", params)
-
+        return await this.callAPI(url, token, "hostgroup.get", params)
     }
 
-    //Блок получения доступных хостов групп
-    async getItems(args) {
+    static async getItems(url, token, reqParam) {
         let params = {
-            output: ["itemid", "hostid","description", "name", "key_","lastclock","lastns","lastvalue","prevvalue"],
-            hostids: args.hostid,
+            output: ["itemid", "hostid", "description", "name", "key_", "lastclock", "lastns", "lastvalue", "prevvalue"],
+            hostids: reqParam.hostid,
             sortfield: "name",
-            selectGraphs: ["graphid","name"],
-            selectApplications: ["applicationid", "hostid","name"]
+            selectGraphs: ["graphid", "name"],
+            selectApplications: ["applicationid", "hostid", "name"]
         }
         Errors.valid(params, this.constructor.name, "getItems")
-        return this.items = await this.call("item.get", params)
+        return await this.callAPI(url, token, "item.get", params)
     }
 
-    //Блок получения истории по элементам данных
-    async getHistory(args) {
+    static async getHistory(url, token, reqParam) {
         let params = {
             output: "extend",
-            itemids: args.itemids,
+            itemids: reqParam.itemids,
             history: 0,
             sortfield: "clock",
             sortorder: "DESC"
         }
-
         Errors.valid(params, this.constructor.name, "getHistory")
-        return this.history = await this.call("history.get", params)
-
+        return await this.callAPI(url, token, "history.get", params)
     }
 
-    //Блок получения доступных графиков
-    async getGraphics(args) {
+    static async getGraphics(url, token, reqParam) {
         let params = {
             "output": ["graphid", "name"],
-            "hostids": args.hostid,
+            "hostids": reqParam.hostid,
             "sortfield": "name",
-            "selectItems": ["itemid","hostid","name","key_","lastclock","lastns","lastvalue","prevvalue"],
+            "selectItems": ["itemid", "hostid", "name", "key_", "lastclock", "lastns", "lastvalue", "prevvalue"],
             "selectHosts": "hostid"
         }
 
         Errors.valid(params, this.constructor.name, "getGraphics")
-        return this.graphs = await this.call("graph.get", params)
-
+        return await this.callAPI(url, token, "graph.get", params)
     }
 
-    //Блок получения доступных элементов графиков
-    async getGraphItems(args) {
+    static async getGraphItems(url, token, reqParam) {
         let params = {
             output: "extend",
             expandData: 1,
-            graphids: args.graphids
+            graphids: reqParam.graphids
         }
-
         Errors.valid(params, this.constructor.name, "getGraphItems")
-        return this.graphitem = await this.call("graphitem.get", params)
-
+        return await this.callAPI(url, token, "graphitem.get", params)
     }
 
-    //Блок получения доступных приложений
-    async getApplications(args) {
+    static async getApplications(url, token, reqParam) {
         let params = {
             output: "extend",
-            hostids: args.hostid,
+            hostids: reqParam.hostid,
             selectItems: ["itemid", "hostid", "name", "key_", "lastclock", "lastns", "lastvalue", "prevvalue"]
         }
         Errors.valid(params, this.constructor.name, "getApplications")
-        return this.application = await this.call("application.get", params)
-
+        return await this.callAPI(url, token, "application.get", params)
     }
-
 }
 
 module.exports = ZabbixAPI

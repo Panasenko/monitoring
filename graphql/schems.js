@@ -2,14 +2,28 @@ const RootQuery = `
   type Query {
     zabbixCliFindById(_id: String!): ZabbixCli
     
-    token(url: String!, user: String!, password: String!): Token
-    version(url: String!): [Version]
+    version(url: String!): Version
+    token(url: String!, input: inputToken): Token    
     hosts(url: String, token: String): [Hosts]
     hostgroup(url: String, token: String): [Hostgroup]
     applications(url: String, token: String): [Applications]
     graphics(url: String, token: String): [Graphics]
     items(url: String, token: String): [Items]
   }  
+  
+  type Version {
+    version: String
+  } 
+  
+  type Token {
+    token: String
+  }
+  
+  input inputToken {
+    user: String,
+    password: String
+  }
+ 
   
   type ZabbixCli {
     name: String, 
@@ -21,7 +35,7 @@ const RootQuery = `
     lastTime: String,
     error: [String], 
     isError: Boolean,
-    items: [String]
+    items: [Items]
   }
   
   type Hosts {
@@ -47,14 +61,6 @@ const RootQuery = `
     name: String,
     items: [Items]
   }
-
-  type Token {
-    token: String
-  }
-    
-  type Version {
-    version: String
-  }   
   
   type Applications {
     applicationid: String,
