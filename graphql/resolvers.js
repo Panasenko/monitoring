@@ -56,11 +56,17 @@ module.exports = {
                 return e
             }
         },
-        createSubdocItemsZabbixCli: async (_, {_id, input}) => { //TODO выяснить какого Х добавляются одинаковые элементы без проверки уникальности. Добавить доп проверки
+        createSubdocItemsZabbixCli: async (parent, {_id, input}) => { //TODO выяснить какого Х добавляются одинаковые элементы без проверки уникальности. Добавить доп проверки
             try {
                 let result = await ZabbixCli.findById(_id)
+                let items = await result.items
+
+                if(_.some(items, input)){
+                    throw new Error("This value already exists in the database.")
+                }
+
                 await result.items.push(input)
-                let subdoc = await result.items[0]
+                let subdoc = await result.items[result.items.length - 1]
                 await result.save()
                 return subdoc
             } catch (e) {
