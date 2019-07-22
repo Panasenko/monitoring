@@ -18,7 +18,7 @@ const ItemsSchema = new mongoose.Schema({
     }
 })
 
-mongoose.model('ItemsSchema', ItemsSchema)
+//mongoose.model('ItemsSchema', ItemsSchema) //TODO: проверить влияние
 
 const AuthZabbixSchema = new mongoose.Schema({
     "name": {

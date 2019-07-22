@@ -38,7 +38,7 @@ class ZabbixAPI {
 
     static async getItems(url, token, reqParam) {
         let params = {
-            output: ["itemid", "hostid", "description", "name", "key_", "lastclock", "lastns", "lastvalue", "prevvalue"],
+            output: "extend",
             hostids: reqParam.hostid,
             sortfield: "name",
             selectGraphs: ["graphid", "name"],
@@ -52,6 +52,8 @@ class ZabbixAPI {
         let params = {
             output: "extend",
             itemids: reqParam.itemids,
+            time_from: reqParam.time_from || null,
+            //time_till: reqParam.time_till || null, //TODO: что-то сделать с проверкой null
             history: 0,
             sortfield: "clock",
             sortorder: "DESC"

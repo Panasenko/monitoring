@@ -56,7 +56,7 @@ module.exports = {
                 return e
             }
         },
-        createSubdocItemsZabbixCli: async (parent, {_id, input}) => { //TODO выяснить какого Х добавляются одинаковые элементы без проверки уникальности. Добавить доп проверки
+        createSubdocItemsZabbixCli: async (parent, {_id, input}) => {
             try {
                 let result = await ZabbixCli.findById(_id)
                 let items = await result.items
