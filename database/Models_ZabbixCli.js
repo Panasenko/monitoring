@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+
 const ItemsSchema = new mongoose.Schema({
     "name": {
         type: String,
@@ -17,8 +18,6 @@ const ItemsSchema = new mongoose.Schema({
         type: String
     }
 })
-
-//mongoose.model('ItemsSchema', ItemsSchema) //TODO: проверить влияние
 
 const AuthZabbixSchema = new mongoose.Schema({
     "name": {
