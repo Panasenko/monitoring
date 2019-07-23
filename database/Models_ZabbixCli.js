@@ -43,12 +43,8 @@ const AuthZabbixSchema = new mongoose.Schema({
     "lastTime": {
         type: String
     },
-    "error": {
-        type: Array
-    },
-    "isError": {
-        type: Boolean,
-        default: false
+    "intervalTime": {
+        type: String
     },
     "items": [ItemsSchema]
 })

@@ -52,12 +52,20 @@ class ZabbixAPI {
         let params = {
             output: "extend",
             itemids: reqParam.itemids,
-            time_from: reqParam.time_from || null,
-            //time_till: reqParam.time_till || null, //TODO: что-то сделать с проверкой null
             history: 0,
             sortfield: "clock",
             sortorder: "DESC"
         }
+
+        if(reqParam.time_from){
+            params.time_from = reqParam.time_from
+        }
+
+        if(reqParam.time_till){
+            params.time_till = reqParam.time_till
+        }
+
+
         Errors.valid(params, this.constructor.name, "getHistory")
         return await this.callAPI(url, token, "history.get", params)
     }

@@ -33,8 +33,7 @@ const RootQuery = `
     _id: String,
     inProgress: Boolean, 
     lastTime: String,
-    error: [String], 
-    isError: Boolean,
+    intervalTime: String,
     items: [Items]
   }
   
