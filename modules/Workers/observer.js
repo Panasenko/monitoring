@@ -16,14 +16,23 @@ class EventObserver {
     broadcast (data) {
         this.observers.forEach(subscriber => subscriber(data))
     }
+
+    changer (data) {
+        this.observers.forEach(subscriber => {
+            if(subscriber._zabbixCli_id === data.zabbixCli_id){
+                subscriber.changer("hello world")
+            }
+
+        })
+    }
 }
 
-let data =   {
+let dataquery =   {
     zabbixCli_id : "5d2796a85ea2b0297c89c45e",
     inProgress : true,
     name : "Zabbix Host",
     description : "Экземпляр Zabbix на локальной машине",
-    url : "http://192.168.0.103/zabbix/api_jsonrpc.php",
+    url : "http://192.168.0.101/zabbix/api_jsonrpc.php",
     token : "b1a13284396c5c2030dce37993375561",
     items : [{
         _id : {
@@ -89,7 +98,13 @@ let data2 =   {
 
 let observ = new EventObserver()
 
-observ.subscribe(new QueryWorker(data))
+observ.subscribe(new QueryWorker(dataquery))
+
+let data = {
+    zabbixCli_id: "5d2796a85ea2b0297c89c45e"
+}
+
+observ.changer(data)
 
 //observ.subscribe(new QueryWorker(data2))
 

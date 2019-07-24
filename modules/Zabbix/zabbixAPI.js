@@ -1,7 +1,7 @@
 const Errors = require("./Errors")
 const CallAPI = require("./CallAPI")
 
-class ZabbixAPI {
+class ZabbixAPI { //TODO: реализовать методы получения событий и проблем
     static async callAPI(url, token, method, params) {
         let new_Obj = new CallAPI(url)
         let result = await new_Obj.call(method, token, params)

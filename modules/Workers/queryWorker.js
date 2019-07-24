@@ -73,7 +73,7 @@ class QueryWorker {
         }
     }
 
-    pollHistory() { //TODO: закончить метод
+    pollHistory() {
         this.timerID = setInterval(async () => { //TODO: Попробовать рекурсивный setTimeout
             if (this._inProgress) {
                 let reqParams = {
@@ -98,6 +98,8 @@ class QueryWorker {
     }
 
     changer(args) {
+
+        console.log(args)
         //TODO: Добавить реализацию изменения свойств объекта
     }
 }
