@@ -1,25 +1,6 @@
 const mongoose = require('mongoose')
 
-const ItemsSchema = new mongoose.Schema({
-    "name": {
-        type: String,
-        required: true
-    },
-    "hostid": {
-        type: String,
-        required: true
-    },
-    "itemid": {
-        type: String,
-        unique: true,
-        required: true
-    },
-    "description": {
-        type: String
-    }
-})
-
-const AuthZabbixSchema = new mongoose.Schema({
+const ZabbixCliSchema = new mongoose.Schema({
     "name": {
         type: String,
         required: true
@@ -46,7 +27,10 @@ const AuthZabbixSchema = new mongoose.Schema({
     "intervalTime": {
         type: String
     },
-    "items": [ItemsSchema]
+    "items": [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Items'
+    }]
 })
 
-mongoose.model('ZabbixCli', AuthZabbixSchema, 'ZabbixCli')
+mongoose.model('ZabbixCli', ZabbixCliSchema, 'zabbixCli')

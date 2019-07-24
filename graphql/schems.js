@@ -89,8 +89,9 @@ const RootMutation = `
     updateZabbixCli(_id: String!, input: ZabbixCliInput): ZabbixCli
     deleteZabbixCli(_id: String!): ZabbixCli
     
-    createSubdocItemsZabbixCli(_id: String!, input: SubdocItemsZabbixCliInput): SubdocItemsZabbixCli
-    deleteSubdocItemsZabbixCli(_id: String!, child_id: String!): SubdocItemsZabbixCli
+    createItemsToZabbixCli(_id: String!, input: ItemsZabbixCliInput): ItemsZabbixCli
+    updateItemsToZabbixCli(_id: String!, input: ItemsZabbixCliInput): ItemsZabbixCli
+    deleteItemsToZabbixCli(_id: String!, child_id: String!): ItemsZabbixCli
   }
   
   input ZabbixCliInput{
@@ -105,14 +106,15 @@ const RootMutation = `
     isError: Boolean
   }
   
-  input SubdocItemsZabbixCliInput {
+  input ItemsZabbixCliInput {
     itemid: String,
     hostid: String,
     name: String,
-    description: String
+    description: String,
+    zabbixCliID: String
   }
   
-  type SubdocItemsZabbixCli {
+  type ItemsZabbixCli {
     _id: String,
     itemid: String,
     hostid: String,
