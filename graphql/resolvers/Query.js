@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const zabbixAPI = require('../../modules/Zabbix/zabbixAPI')
+const zabbixAPI = require('../../modules/zabbix/zabbixAPI')
 const mongoose = require('mongoose')
 const ZabbixCli = mongoose.model('ZabbixCli')
 

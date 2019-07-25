@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const zabbixAPI = require('../../modules/Zabbix/zabbixAPI')
+const zabbixAPI = require('../../modules/zabbix/zabbixAPI')
 
 module.exports = {
     applications: async (parent, args) => {

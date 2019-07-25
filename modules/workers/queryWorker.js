@@ -1,10 +1,10 @@
 const _ = require('lodash')
-const ZabbixAPI = require('../Zabbix/zabbixAPI')
+const ZabbixAPI = require('../zabbix/zabbixAPI')
 
 
 class QueryWorker {
     constructor(args) {
-        this._zabbixCli_id = args.zabbixCli_id
+        this._id = args._id
         this._name = args.name
         this._description = args.description
         this._url = args.url
@@ -13,11 +13,18 @@ class QueryWorker {
         this._intervalTime = args.intervalTime || 3000
         this._inProgress = args.inProgress || false
         this._lastTime = args.lastTime || null
-        this._error = []
         this._isError = false
         this._timerID = null
 
         this.pollHistory()
+    }
+
+    get inProgress() {
+        return this._inProgress
+    }
+
+    set inProgress(value) {
+        this._inProgress = value
     }
 
     get timerID() {
@@ -73,14 +80,14 @@ class QueryWorker {
         }
     }
 
-    pollHistory() {
+    pollHistory() { //TODO: вынести в отдельный класс
         this.timerID = setInterval(async () => { //TODO: Попробовать рекурсивный setTimeout
             if (this._inProgress) {
                 let reqParams = {
                     itemids: this.parsItems(this.items),
                     time_from: this.lastTime || Date.now() / 1000 | 0
                 }
-
+                    console.log('start')
                 try {
                     let dataHistory = await ZabbixAPI.getHistory(this._url, this._token, reqParams)
                     this.lastTime = Date.now() / 1000 | 0
@@ -92,14 +99,22 @@ class QueryWorker {
                     this.isError = true
                 }
             } else {
+                console.log('finish')
                 clearInterval(this.timerID)
             }
         }, this.intervalTime)
     }
 
-    changer(args) {
-
-
+    changer(data) {
+        _.forEach(data, (value, key) => {
+            switch (key) {
+                case "inProgress": this.inProgress = value
+                    break
+                case "intervalTime": this.intervalTime = value
+                    break
+            }
+        })
+            console.log(this.inProgress)
     }
 }
 
