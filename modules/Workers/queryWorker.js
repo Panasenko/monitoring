@@ -99,8 +99,7 @@ class QueryWorker {
 
     changer(args) {
 
-        console.log(args)
-        //TODO: Добавить реализацию изменения свойств объекта
+
     }
 }
 

@@ -1,0 +1,37 @@
+type Mutation {
+    createZabbixCli(input: ZabbixCliInput): ZabbixCli
+    updateZabbixCli(_id: String!, input: ZabbixCliInput): ZabbixCli
+    deleteZabbixCli(_id: String!): ZabbixCli
+
+    createItemsToZabbixCli(_id: String!, input: ItemsZabbixCliInput): ItemsZabbixCli
+    updateItemsToZabbixCli(_id: String!, input: ItemsZabbixCliInput): ItemsZabbixCli
+    deleteItemsToZabbixCli(_id: String!, child_id: String!): ItemsZabbixCli
+}
+
+input ZabbixCliInput{
+    name: String,
+    description: String,
+    url: String,
+    token: String,
+    _id: String,
+    inProgress: Boolean,
+    lastTime: String,
+    error: [String],
+    isError: Boolean
+}
+
+input ItemsZabbixCliInput {
+    itemid: String,
+    hostid: String,
+    name: String,
+    description: String,
+    zabbixCliID: String
+}
+
+type ItemsZabbixCli {
+    _id: String,
+    itemid: String,
+    hostid: String,
+    name: String,
+    description: String
+}

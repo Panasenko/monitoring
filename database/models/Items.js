@@ -18,7 +18,7 @@ const ItemsSchema = new mongoose.Schema({
         type: String
     },
     "zabbixCliID": {
-        type: String
+        type: mongoose.Schema.Types.ObjectId
     }
 })
 

@@ -1,10 +1,11 @@
 require('dotenv').config()
 const Hapi = require('hapi')
-const {ApolloServer, gql} = require('apollo-server-hapi')
+const {ApolloServer} = require('apollo-server-hapi')
+const { importSchema } = require('graphql-import')
 require('./database/MongoDB')
 
-const resolvers = require('./graphql/resolvers')
-const typeDefs = require('./graphql/schems')
+const resolvers = require('./graphql/resolvers/resolvers')
+const typeDefs = importSchema('./graphql/schems/schema.graphql')
 
 async function StartServer() {
     const server = new ApolloServer({typeDefs, resolvers})
