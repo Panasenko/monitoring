@@ -1,5 +1,5 @@
 const Observer = require('./observer')
-const QueryWorker = require('./queryWorker')
+const HistoryGet = require('./historyGet')
 
 class Controller {
     constructor(){
@@ -13,7 +13,7 @@ class Controller {
             inProgress : false,
             name : "zabbix Host",
             description : "Экземпляр zabbix на локальной машине",
-            url : "http://192.168.0.101/zabbix/api_jsonrpc.php",
+            url : "http://192.168.0.103/zabbix/api_jsonrpc.php",
             token : "b1a13284396c5c2030dce37993375561",
             items : [{
                 _id : {
@@ -43,7 +43,7 @@ class Controller {
             "__v" : 19
         }
 
-        this.observer.subscribe(new QueryWorker(dataquery))
+        this.observer.subscribe(new HistoryGet(dataquery))
     }
 
     updateProperties(id, data){
@@ -58,6 +58,11 @@ cont.addWorkers()
 cont.updateProperties("5d2796a85ea2b0297c89c45e", {inProgress : true})
 
 setTimeout(()=> {
-    console.log('timer')
+    console.log(`stop - ${new Date()}`)
     cont.updateProperties("5d2796a85ea2b0297c89c45e", {inProgress : false})
 }, 50000)
+
+setTimeout(()=> {
+    console.log(`start agane - ${new Date()}`)
+    cont.updateProperties("5d2796a85ea2b0297c89c45e", {inProgress : true})
+}, 80000)
