@@ -6,27 +6,37 @@ const ZabbixCli = mongoose.model('ZabbixCli')
 
 class Controller {
     constructor(){
-        this._observer = new Observer()
-    }
-
-    get observer(){
-        return this._observer
+        this.observer = new Observer()
+        this.addWorkers()
     }
 
     async addWorkers(){
         let arrZabbixCli = await ZabbixCli.find({}).populate('items')
-
         if(_.isArray(await arrZabbixCli)){
             _.forEach(await arrZabbixCli, async (zCliData) => {
                 return await this.observer.subscribe(new HistoryGet(zCliData))
             })
         }
-
-
     }
 
-    static updateProperties(id, data){
-        this.observer.update(id, data)
+    getWorkers(){
+        return this.observer.observer
+    }
+
+    updateWorkers(id, data){
+        this.observer.updateSubscribe(id, data)
+    }
+
+    deleteWorkers(id){
+        this.observer.unsubscribe(id)
+    }
+
+    createItemsWorkers(id, items){
+        this.observer.createItemsSubscribe (id, items)
+    }
+
+    deleteItemsWorkers(id, items){
+        this.observer.deleteItemsSubscribe (id, items)
     }
 
 }

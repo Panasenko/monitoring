@@ -4,7 +4,6 @@ type Mutation {
     deleteZabbixCli(_id: String!): ZabbixCli
 
     createItemsToZabbixCli(_id: String!, input: ItemsZabbixCliInput): ItemsZabbixCli
-    updateItemsToZabbixCli(_id: String!, input: ItemsZabbixCliInput): ItemsZabbixCli
     deleteItemsToZabbixCli(_id: String!, child_id: String!): ItemsZabbixCli
 }
 

@@ -5,7 +5,7 @@ const ZabbixAPI = require('../zabbix/zabbixAPI')
 class HistoryGet extends Worker {
     constructor(args) {
         super(args)
-        this._items = args.items
+        this._items = args.items || []
 
         this.controllerSetInterval(this._inProgress)
     }
@@ -22,6 +22,14 @@ class HistoryGet extends Worker {
         this._inProgress = value
         this.controllerSetInterval(value)
 
+    }
+
+    addItems(items){
+        this.items = ChangItems.createItems(this.items, items)
+    }
+
+    deleteItems(items){
+        this.items = ChangItems.deleteItems(this.items, items)
     }
 
     controllerSetInterval(value) {

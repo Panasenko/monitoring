@@ -1,5 +1,7 @@
 type Query {
     zabbixCliFindById(_id: String!): ZabbixCli
+    zabbixCliFind(_id: String): [ZabbixCli]
+    getWorkers(_id: String): [ZabbixCli]
     version(url: String!): Version
     token(url: String!, input: inputToken): Token
     hosts(url: String, token: String): [Hosts]

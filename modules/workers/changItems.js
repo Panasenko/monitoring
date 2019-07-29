@@ -31,10 +31,9 @@ class ChangItems {
         if(_.isArray(itemsArr) && _.isObject(items)) {
             return _.reject(itemsArr, items)
         } else {
-            throw new Error("Method createItems - Invalid parameters passed")
+            throw new Error("Method deleteItems - Invalid parameters passed")
         }
     }
-
 }
 
 module.exports = ChangItems
