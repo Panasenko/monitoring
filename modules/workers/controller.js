@@ -4,41 +4,49 @@ const HistoryGet = require('./historyGet')
 const mongoose = require('mongoose')
 const ZabbixCli = mongoose.model('ZabbixCli')
 
-class Controller {
-    constructor(){
-        this.observer = new Observer()
-        this.addWorkers()
-    }
+let Controller = {
 
-    async addWorkers(){
+    ob: null,
+
+    observer: () => {
+        if (!_.isNull(this.ob)) {
+            return this.ob = new Observer()
+        }
+        return this.ob
+    },
+
+    startWorkers: async () => {
         let arrZabbixCli = await ZabbixCli.find({}).populate('items')
-        if(_.isArray(await arrZabbixCli)){
+        if (_.isArray(await arrZabbixCli)) {
             _.forEach(await arrZabbixCli, async (zCliData) => {
-                return await this.observer.subscribe(new HistoryGet(zCliData))
+                return await this.ob.subscribe(new HistoryGet(zCliData))
             })
         }
-    }
+    },
 
-    getWorkers(){
-        return this.observer.observer
-    }
+    createWorkers: async () => {
+        return await this.ob.subscribe(new HistoryGet(zCliData))
+    },
 
-    updateWorkers(id, data){
-        this.observer.updateSubscribe(id, data)
-    }
+    getWorkers: () => {
+        return this.ob.getSubscribe()
+    },
 
-    deleteWorkers(id){
-        this.observer.unsubscribe(id)
-    }
+    updateWorkers: (id) => {
+        this.ob.updateSubscribe(id)
+    },
 
-    createItemsWorkers(id, items){
-        this.observer.createItemsSubscribe (id, items)
-    }
+    changWorkers: (id, data) => {
+        this.ob.changSubscribe(id, data)
+    },
 
-    deleteItemsWorkers(id, items){
-        this.observer.deleteItemsSubscribe (id, items)
+    deleteWorkers: (id) => {
+        this.ob.unsubscribe(id)
     }
 
 }
+
+Controller.observer()
+Controller.startWorkers()
 
 module.exports = Controller

@@ -5,50 +5,34 @@ class EventObserver {
         this._observers = []
     }
 
-    get observer(){
+    subscribe (fn) {
+        this._observers.push(fn)
+    }
+
+    getSubscribe(){
         return this._observers
     }
 
-    set observer(value){
-        if(!_.some(this.observers, value._id)){
-            this.observers.push(value)
-        } else {
-            throw new Error("Данный объект уже существует в подписчиках")
-        }
-    }
-
-    subscribe (fn) {
-        this.observers = fn
-    }
-
     unsubscribe (id) {
-        this.observers = this.observers.filter(subscriber => subscriber._id !== id)
-        console.log(this.observers)
+        this._observers = this._observers.filter(subscriber => subscriber._id !== id)
     }
 
-    updateSubscribe (id, data) {
-        this.observers.forEach(subscriber => {
+    changSubscribe (id, data) {
+        this._observers.forEach(subscriber => {
             if(subscriber._id === id){
-                subscriber.changer(data)
+                subscriber.updateProperties(data)
             }
         })
     }
 
-    createItemsSubscribe (id, items) {
-        this.observers.forEach(subscriber => {
+    updateSubscribe (id) {
+        this._observers.forEach(subscriber => {
             if(subscriber._id === id){
-                subscriber.addItems(items)
+                subscriber.updateProperties()
             }
         })
     }
 
-    deleteItemsSubscribe (id, itemsId) {
-        this.observers.forEach(subscriber => {
-            if(subscriber._id === id){
-                subscriber.deleteItems(itemsId)
-            }
-        })
-    }
 }
 
 module.exports = EventObserver

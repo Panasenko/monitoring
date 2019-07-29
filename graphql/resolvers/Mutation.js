@@ -5,23 +5,21 @@ const Items = mongoose.model('Items')
 
 const Controller = require('./../../modules/workers/controller')
 
-const controller = new Controller()
-
 module.exports = {
     createZabbixCli: async (_, {input}) => {
         try {
-            controller.addWorkers(input)
-            return await ZabbixCli.create(input)
+            let newZabbixCli = await ZabbixCli.create(input)
+            Controller.createWorkers(newZabbixCli)
+            return newZabbixCli
         } catch (error) {
             return error
         }
     },
     updateZabbixCli: async (_, {_id, input}) => {
         try {
-
-            controller.updateWorkers(input)
-
-            return await ZabbixCli.findByIdAndUpdate(_id, input, {new: true})
+             let updateZabbixCli = await ZabbixCli.findByIdAndUpdate(_id, input, {new: true})
+            Controller.changWorkers(_id, updateZabbixCli)
+            return updateZabbixCli
         } catch (e) {
             return e
         }
@@ -35,7 +33,7 @@ module.exports = {
                 }
             })
 
-            controller.deleteWorkers(args._id)
+            Controller.deleteWorkers(args._id)
 
             return elementDelete
         } catch (e) {
@@ -50,7 +48,7 @@ module.exports = {
             await result.items.push(newItems._id)
             await result.save()
 
-            controller.createItemsWorkers(_id, input)
+            Controller.updateWorkers()
 
             return newItems
         } catch (e) {
@@ -66,7 +64,7 @@ module.exports = {
             })
             await result.save()
 
-            controller.deleteItemsSubscribe(args._id, args.child_id)
+            Controller.updateWorkers()
 
             return Items.findByIdAndRemove(args.child_id)
         } catch (e) {

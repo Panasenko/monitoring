@@ -113,6 +113,8 @@ class Worker {
                 case "intervalTime": this.intervalTime = value
                     break
             }
+
+
         })
     }
 }
