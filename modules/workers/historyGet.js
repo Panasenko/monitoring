@@ -35,21 +35,30 @@ class HistoryGet extends Worker {
             if (this._inProgress) {
                 this.status = true
 
-                let reqParams = {
-                    itemids: ChangItems.parsItems(this.items),
-                    time_from: this.lastTime || Date.now() / 1000 | 0
-                }
+                for(let [key, value] of ChangItems.parsItems(this.items).entries()){
 
-                try {
-                    let dataHistory = await ZabbixAPI.getHistory(this._url, this._token, reqParams)
-                    this.lastTime = Date.now() / 1000 | 0
-                    this.isError = false
-                    console.log(dataHistory)
+                    if(value.length > 0) {
+                        let reqParams = {
+                            itemids: value,
+                            time_from: this.lastTime || Date.now() / 1000 | 0,
+                            history: key
+                        }
 
-                } catch (e) {
-                    console.log(e)
-                    this.isError = true
+                        try {
+                            let dataHistory = await ZabbixAPI.getHistory(this._url, this._token, reqParams)
+                            this.isError = false
+
+                            if(dataHistory.length > 0) {
+                                console.log(dataHistory)
+                            }
+                        } catch (e) {
+                            console.log(e)
+                            this.isError = true
+                        }
+                    }
                 }
+                this.lastTime = Date.now() / 1000 | 0
+
             } else {
                 clearInterval(this.timerID)
                 this.status = false

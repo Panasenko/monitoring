@@ -25,7 +25,9 @@ input ItemsZabbixCliInput {
     hostid: String,
     name: String,
     description: String,
-    zabbixCliID: String
+    zabbixCliID: String,
+    value_type: String,
+    units: String
 }
 
 type ItemsZabbixCli {
@@ -33,5 +35,7 @@ type ItemsZabbixCli {
     itemid: String,
     hostid: String,
     name: String,
-    description: String
+    description: String,
+    value_type: String,
+    units: String
 }

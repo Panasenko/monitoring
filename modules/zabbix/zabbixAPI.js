@@ -52,7 +52,7 @@ class ZabbixAPI { //TODO: реализовать методы получения
         let params = {
             output: "extend",
             itemids: reqParam.itemids,
-            history: 0,
+            history: reqParam.history || 0,
             sortfield: "clock",
             sortorder: "DESC"
         }

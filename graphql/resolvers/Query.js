@@ -3,8 +3,13 @@ const zabbixAPI = require('../../modules/zabbix/zabbixAPI')
 const mongoose = require('mongoose')
 const ZabbixCli = mongoose.model('ZabbixCli')
 
+const Controller = require('./../../modules/workers/controller')
+
 module.exports = {
-        zabbixCliFindById: async (_, args) => {
+        zabbixCliFindById: async (parent, args) => {
+            let con = new Controller
+                con.addWorkers()
+
             return await ZabbixCli.findOne({_id: args._id}).populate('items')
         },
         token: async (_, args) => {

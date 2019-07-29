@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 
 const ItemsSchema = new mongoose.Schema({
+    "zabbixCliID": {
+        type: mongoose.Schema.Types.ObjectId
+    },
     "name": {
         type: String,
         required: true
@@ -17,9 +20,13 @@ const ItemsSchema = new mongoose.Schema({
     "description": {
         type: String
     },
-    "zabbixCliID": {
-        type: mongoose.Schema.Types.ObjectId
+    "value_type": {
+        type: String
+    },
+    "units": {
+        type: String
     }
+
 })
 
 mongoose.model('Items', ItemsSchema, 'items')

@@ -1,12 +1,13 @@
 const _ = require('lodash')
 
 class ChangItems {
+
     static parsItems(items) {
         if (_.every(items, value => _.isObject(value))) {
             return _.reduce(items, function (accumulator, value) {
-                accumulator.push(value.itemid)
+                accumulator[+value.value_type].push(value.itemid)
                 return accumulator
-            }, [])
+            }, [[],[],[],[],[]])
         } else if (_.every(items, value => _.isString(value))) {
             return items
         } else {
@@ -37,3 +38,4 @@ class ChangItems {
 }
 
 module.exports = ChangItems
+
