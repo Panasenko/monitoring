@@ -8,18 +8,20 @@ type Mutation {
 }
 
 input ZabbixCliInput{
+    _id: String,
     name: String,
     description: String,
     url: String,
     token: String,
-    _id: String,
     inProgress: Boolean,
-    lastTime: String,
-    error: [String],
-    isError: Boolean
+    lastTime: Int,
+    isError: Boolean,
+    intervalTime: Int,
+    items: [ItemsZabbixCliInput]
 }
 
 input ItemsZabbixCliInput {
+    _id: String,
     itemid: String,
     hostid: String,
     name: String,
@@ -34,6 +36,7 @@ type ItemsZabbixCli {
     itemid: String,
     hostid: String,
     name: String,
+    zabbixCliID: String,
     description: String,
     value_type: String,
     units: String

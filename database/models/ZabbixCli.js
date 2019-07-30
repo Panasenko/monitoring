@@ -22,10 +22,10 @@ const ZabbixCliSchema = new mongoose.Schema({
         default: false
     },
     "lastTime": {
-        type: String
+        type: Number
     },
     "intervalTime": {
-        type: String
+        type: Number
     },
     "items": [{
         type: mongoose.Schema.Types.ObjectId,

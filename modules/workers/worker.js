@@ -11,7 +11,7 @@ class Worker {
         this._token = args.token
         this._intervalTime = args.intervalTime || 10000
         this._inProgress = args.inProgress || false
-        this._lastTime = args.lastTime || null
+        this._lastTime = args.lastTime || (Date.now() / 1000 | 0) - 3600
         this._isError = false
         this._timerID = null
         this._status = false
@@ -95,27 +95,6 @@ class Worker {
 
     set isError(value) {
         this._isError = value
-    }
-
-    changer(data) {
-        _.forEach(data, (value, key) => {
-            switch (key) {
-                case "name": this.name = value
-                    break
-                case "description": this.description = value
-                    break
-                case "token": this.token = value
-                    break
-                case "url": this.url = value
-                    break
-                case "inProgress": this.inProgress = value
-                    break
-                case "intervalTime": this.intervalTime = value
-                    break
-            }
-
-
-        })
     }
 }
 

@@ -8,7 +8,7 @@ class HistoryGet extends Worker {
     constructor(args) {
         super(args)
         this._items = args.items || []
-        this.controllerSetInterval(this._inProgress)
+        this.updateProperties()
     }
 
     get items() {
@@ -19,64 +19,85 @@ class HistoryGet extends Worker {
         this._items = value
     }
 
-    controllerSetInterval(value) {
+    async updateProperties() {
+        let data = await ZabbixCli.findById(this._id).populate('items')
+        console.log("получение данных из БД")
 
-        console.log(`controllerSetInterval  (${value})`)
-        if (value && !this.status) {
-            this.pollHistory()
+        this.name = data.name
+        this.description = data.description
+        this.url = data.url
+        this.token = data.token
+        this.intervalTime = data.intervalTime
+        this.inProgress = data.inProgress
+        this.lastTime = data.lastTime
+        this.isError = data.isError
+        this.items = data.items
+
+        if (this.inProgress && !this.status) {
+            return this.workerHistory()
+        }
+
+    }
+
+    async setPropertiesToDB() {
+        console.log("обновление данных в БД")
+
+        let dataUpdate = {}
+        dataUpdate.lastTime = this.lastTime
+        dataUpdate.isError = this.isError
+
+
+        return await ZabbixCli.findByIdAndUpdate(this._id, dataUpdate, {new: true})
+
+    }
+
+    async callHistoryAPI() {
+
+        console.log("Вызов АПИ")
+
+        for (let [key, value] of ChangItems.parsItems(this.items).entries()) {
+            if (value.length > 0) {
+                let reqParams = {}
+                reqParams.itemids = value
+                reqParams.time_from = this.lastTime || Date.now() / 1000 | 0
+                reqParams.history = key
+
+                try {
+                    let dataHistory = await ZabbixAPI.getHistory(this._url, this._token, reqParams)
+                    this.isError = false
+
+                    if (dataHistory.length > 0) {
+                        console.log(dataHistory)
+                    }
+                } catch (e) {
+                    console.log(e)
+                    this.isError = true
+                }
+            }
         }
     }
 
-    updateProperties() {
-        let dataZabbixCli = ZabbixCli.findById(this._id).populate('items')
-        this.items = dataZabbixCli.items
-        super.changer(dataZabbixCli)
-        return dataZabbixCli
-    }
-
-    pollHistory() {
+    workerHistory() {
         console.log("start")
 
         this.timerID = setInterval(async () => { //TODO: Попробовать рекурсивный setTimeout
 
-            this.updateProperties()
-
-            if (this._inProgress) {
+            if (this.inProgress && this.items.length > 0) {
                 this.status = true
-
-                for(let [key, value] of ChangItems.parsItems(this.items).entries()){
-
-                    if(value.length > 0) {
-                        let reqParams = {
-                            itemids: value,
-                            time_from: this.lastTime || Date.now() / 1000 | 0,
-                            history: key
-                        }
-
-                        try {
-                            let dataHistory = await ZabbixAPI.getHistory(this._url, this._token, reqParams)
-                            this.isError = false
-
-                            if(dataHistory.length > 0) {
-                                console.log(dataHistory)
-                            }
-                        } catch (e) {
-                            console.log(e)
-                            this.isError = true
-                        }
-                    }
-                }
+                await this.callHistoryAPI()
                 this.lastTime = Date.now() / 1000 | 0
-
             } else {
                 console.log("stop")
                 clearInterval(this.timerID)
                 this.status = false
             }
 
+            await this.setPropertiesToDB()
+
         }, this.intervalTime)
 
     }
+
 
 }
 

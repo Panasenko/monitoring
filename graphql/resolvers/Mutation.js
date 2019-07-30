@@ -6,36 +6,34 @@ const Items = mongoose.model('Items')
 const Controller = require('./../../modules/workers/controller')
 
 module.exports = {
-    createZabbixCli: async (_, {input}) => {
+    createZabbixCli: async (parent, {input}) => {
         try {
-            let newZabbixCli = await ZabbixCli.create(input)
-            Controller.createWorkers(newZabbixCli)
-            return newZabbixCli
+            let data = await ZabbixCli.create(input)
+            await Controller.createWorkers(data)
+            return await data
         } catch (error) {
             return error
         }
     },
-    updateZabbixCli: async (_, {_id, input}) => {
+    updateZabbixCli: async (parent, {_id, input}) => {
         try {
              let updateZabbixCli = await ZabbixCli.findByIdAndUpdate(_id, input, {new: true})
-            Controller.changWorkers(_id, updateZabbixCli)
-            return updateZabbixCli
+            await Controller.updateWorkers(_id)
+            return await updateZabbixCli
         } catch (e) {
             return e
         }
     },
-    deleteZabbixCli: async (_, args) => {
+    deleteZabbixCli: async (parent, {_id}) => {
         try {
-            let elementDelete = ZabbixCli.findByIdAndRemove(args._id)
-            Items.deleteMany({ zabbixCliID: args._id }, function (err) {
+            let elementDelete = await ZabbixCli.findByIdAndRemove(_id)
+            await Items.deleteMany({ zabbixCliID: _id }, function (err) {
                 if(err){
                     throw new Error(err)
                 }
             })
-
-            Controller.deleteWorkers(args._id)
-
-            return elementDelete
+            await Controller.deleteWorkers(_id)
+            return await elementDelete
         } catch (e) {
             return e
         }
@@ -48,7 +46,7 @@ module.exports = {
             await result.items.push(newItems._id)
             await result.save()
 
-            Controller.updateWorkers()
+            Controller.updateWorkers(_id)
 
             return newItems
         } catch (e) {
@@ -63,10 +61,8 @@ module.exports = {
                 return item === args.child_id
             })
             await result.save()
-
-            Controller.updateWorkers()
-
-            return Items.findByIdAndRemove(args.child_id)
+            await Controller.updateWorkers(args._id)
+            return await Items.findByIdAndRemove(args.child_id)
         } catch (e) {
             return e
         }

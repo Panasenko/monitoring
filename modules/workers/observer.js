@@ -14,23 +14,16 @@ class EventObserver {
     }
 
     unsubscribe (id) {
-        this._observers = this._observers.filter(subscriber => subscriber._id !== id)
-    }
-
-    changSubscribe (id, data) {
-        this._observers.forEach(subscriber => {
-            if(subscriber._id === id){
-                subscriber.updateProperties(data)
-            }
-        })
+        this._observers = _.filter(this._observers,subscriber => String(subscriber._id) !== id)
     }
 
     updateSubscribe (id) {
-        this._observers.forEach(subscriber => {
-            if(subscriber._id === id){
-                subscriber.updateProperties()
+        _.forEach(this._observers, (subscriber) => {
+            if(String(subscriber._id) === id){
+                 subscriber.updateProperties()
             }
         })
+
     }
 
 }

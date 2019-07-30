@@ -68,6 +68,7 @@ type Applications {
 }
 
 type Items {
+    _id: String,
     itemid: String,
     hostid: String,
     name: String,

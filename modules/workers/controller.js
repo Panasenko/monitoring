@@ -24,8 +24,8 @@ let Controller = {
         }
     },
 
-    createWorkers: async () => {
-        return await this.ob.subscribe(new HistoryGet(zCliData))
+    createWorkers: async (data) => {
+        return await this.ob.subscribe(new HistoryGet(data))
     },
 
     getWorkers: () => {
@@ -34,10 +34,6 @@ let Controller = {
 
     updateWorkers: (id) => {
         this.ob.updateSubscribe(id)
-    },
-
-    changWorkers: (id, data) => {
-        this.ob.changSubscribe(id, data)
     },
 
     deleteWorkers: (id) => {
