@@ -5,8 +5,8 @@ class EventObserver {
         this._observers = []
     }
 
-    subscribe (fn) {
-        this._observers.push(fn)
+    subscribe (obj) {
+        this._observers.push(obj)
     }
 
     getSubscribe(){

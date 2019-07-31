@@ -21,7 +21,7 @@ class HistoryGet extends Worker {
 
     async updateProperties() {
         let data = await ZabbixCli.findById(this._id).populate('items')
-        console.log("получение данных из БД")
+        console.log("Получение данных из БД")
 
         this.name = data.name
         this.description = data.description
@@ -29,26 +29,12 @@ class HistoryGet extends Worker {
         this.token = data.token
         this.intervalTime = data.intervalTime
         this.inProgress = data.inProgress
-        this.lastTime = data.lastTime
         this.isError = data.isError
         this.items = data.items
 
         if (this.inProgress && !this.status) {
             return this.workerHistory()
         }
-
-    }
-
-    async setPropertiesToDB() {
-        console.log("обновление данных в БД")
-
-        let dataUpdate = {}
-        dataUpdate.lastTime = this.lastTime
-        dataUpdate.isError = this.isError
-
-
-        return await ZabbixCli.findByIdAndUpdate(this._id, dataUpdate, {new: true})
-
     }
 
     async callHistoryAPI() {
@@ -91,9 +77,6 @@ class HistoryGet extends Worker {
                 clearInterval(this.timerID)
                 this.status = false
             }
-
-            await this.setPropertiesToDB()
-
         }, this.intervalTime)
 
     }

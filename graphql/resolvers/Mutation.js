@@ -2,14 +2,13 @@ const _ = require('lodash')
 const mongoose = require('mongoose')
 const ZabbixCli = mongoose.model('ZabbixCli')
 const Items = mongoose.model('Items')
-
-const Controller = require('./../../modules/workers/controller')
+const HistoryGetController = require('./../../modules/workers/factory')({typeObject: "HistoryGet"})
 
 module.exports = {
     createZabbixCli: async (parent, {input}) => {
         try {
             let data = await ZabbixCli.create(input)
-            await Controller.createWorkers(data)
+            await HistoryGetController.createWorkers(data)
             return await data
         } catch (error) {
             return error
@@ -18,7 +17,7 @@ module.exports = {
     updateZabbixCli: async (parent, {_id, input}) => {
         try {
              let updateZabbixCli = await ZabbixCli.findByIdAndUpdate(_id, input, {new: true})
-            await Controller.updateWorkers(_id)
+            await HistoryGetController.updateWorkers(_id)
             return await updateZabbixCli
         } catch (e) {
             return e
@@ -32,7 +31,7 @@ module.exports = {
                     throw new Error(err)
                 }
             })
-            await Controller.deleteWorkers(_id)
+            await HistoryGetController.deleteWorkers(_id)
             return await elementDelete
         } catch (e) {
             return e
@@ -46,7 +45,7 @@ module.exports = {
             await result.items.push(newItems._id)
             await result.save()
 
-            Controller.updateWorkers(_id)
+            HistoryGetController.updateWorkers(_id)
 
             return newItems
         } catch (e) {
@@ -61,7 +60,7 @@ module.exports = {
                 return item === args.child_id
             })
             await result.save()
-            await Controller.updateWorkers(args._id)
+            await HistoryGetController.updateWorkers(args._id)
             return await Items.findByIdAndRemove(args.child_id)
         } catch (e) {
             return e
