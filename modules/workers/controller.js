@@ -19,8 +19,8 @@ class Controller {
         }
     }
 
-    async createWorkers(data) {
-        return await this.ob.subscribe(new this.newObject(data))
+    createWorkers(data) {
+        return this.ob.subscribe(new this.newObject(data))
     }
 
     getWorkers() {
