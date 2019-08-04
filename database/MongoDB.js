@@ -37,3 +37,5 @@ process.on('SIGINT', function() {
 
 require('./models/ZabbixCli')
 require('./models/Items')
+require('./models/Triggers')
+require('./models/Evets')
