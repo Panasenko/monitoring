@@ -13,6 +13,14 @@ const EventsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    "status": {
+        type: String,
+        required: true
+    },
+    "level": {
+        type: String,
+        required: true
+    },
     "eventTimeStart": {
         type: Number,
         required: true

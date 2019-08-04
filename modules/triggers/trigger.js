@@ -9,7 +9,7 @@ class Trigger {
         this.eventStatus = false
         this.eventObj = null
         this.eventTimeStart = null
-
+        this.eventTimeUpdate = null
         this.closeTime = args.closeTime
 
         this.disaster = this.initInstruction(`intervalTime(clock,8,19)`)
@@ -36,26 +36,29 @@ class Trigger {
         return from <= getHours && getHours <= before
     }
 
-    workerAlerts(itemsObj){
-        if(!this.eventStatus){
-            if(_.isObject(itemsObj)){
-                itemsObj.eventStatus = this.eventStatus = true
-                itemsObj.eventTimeStart = this.eventTimeStart = new Date().getTime()/1000 | 0
+    workerAlerts(itemsObj) {
+        if (!this.eventStatus) {
+            if (_.isObject(itemsObj)) {
+                this.eventStatus = true
+
+                itemsObj.status = "active"
+                itemsObj.eventTimeStart = this.eventTimeStart = new Date().getTime() / 1000 | 0
             } else {
                 throw new Error("item not transferred")
             }
             return this.eventObj = new Event(itemsObj)
         } else {
-            if(!_.isNull(this.eventObj)){
+            if (!_.isNull(this.eventObj)) {
 
-                if(_.isObject(itemsObj)){
-                    itemsObj.eventStatus = this.eventStatus = true
-                    itemsObj.eventTimeStart = this.eventTimeStart = new Date().getTime()/1000 | 0
+                if (_.isObject(itemsObj)) {
+
+                    itemsObj.status = "active"
+                    itemsObj.eventTimeUpdate = this.eventTimeUpdate = new Date().getTime() / 1000 | 0
                 } else {
                     throw new Error("item not transferred")
                 }
 
-                return this.eventObj.updateEvent()
+                return this.eventObj.updateEvent(itemsObj)
             }
 
             throw new Error("Event object not created")
@@ -74,27 +77,36 @@ class Trigger {
             case this.disaster(data, ...methods):
                 console.log("disaster")
                 data.level = "disaster"
+                data.description = `Triggers - ${this.name} .Level ${data.level}`
                 this.workerAlerts(data)
                 break
             case this.high:
                 console.log("high")
-                this.alertTime = new Date().getTime()/1000 | 0
+                data.level = "high"
+                data.description = `Triggers - ${this.name} .Level ${data.level}`
+                this.workerAlerts(data)
                 break
             case this.average:
                 console.log("average")
-                this.alertTime = new Date().getTime()/1000 | 0
+                data.level = "average"
+                data.description = `Triggers - ${this.name} .Level ${data.level}`
+                this.workerAlerts(data)
                 break
             case this.warning:
                 console.log("warning")
-                this.alertTime = new Date().getTime()/1000 | 0
+                data.level = "warning"
+                data.description = `Triggers - ${this.name} .Level ${data.level}`
+                this.workerAlerts(data)
                 break
             case this.information:
                 console.log("information")
-                this.alertTime = new Date().getTime()/1000 | 0
+                data.level = "information"
+                data.description = `Triggers - ${this.name} .Level ${data.level}`
+                this.workerAlerts(data)
                 break
             default:
                 console.log("none")
-                if(this.alertTime){
+                if (this.eventStatus && this.eventTimeUpdate + 300 < (new Date().getTime() / 1000 | 0)) {
 
                 }
         }
