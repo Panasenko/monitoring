@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Events = mongoose.model('Events')
+//const Events = mongoose.model('Events')
 
 class Event{
     constructor(args){
@@ -30,11 +30,17 @@ class Event{
         newData.historyChange = this.historyChange.push(newData)
 
         try {
-           return await Events.create(newData)
+           //return await Events.create(newData)
        }catch (e) {
            throw new Error(e)
        }
 
+    }
+
+    updateProperties(){
+
+
+    this.updateEvent()
     }
 
     updateEvent(){
