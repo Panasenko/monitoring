@@ -2,6 +2,7 @@ const _ = require('lodash')
 const zabbixAPI = require('../../modules/zabbix/zabbixAPI')
 const ZabbixCliDB = require('./../../database/controllers/ZabbixCli')
 const HistoryGetController = require('./../../modules/workers/factory')({typeObject: "HistoryGet"})
+const QZabbixAPI = require('./query/qZabbixAPI')
 
 module.exports = {
     zabbixCliFindById: async (parent, args) => {
@@ -13,7 +14,7 @@ module.exports = {
     getWorkers: () => {
         return HistoryGetController.getWorkers()
     },
-    token: async (_, args) => {
+    /*token: async (_, args) => {
         let token = await zabbixAPI.login(args.url, args.input)
         return {
             token: token
@@ -37,5 +38,14 @@ module.exports = {
     },
     items: async (parent, args) => {
         return await zabbixAPI.getItems(args.url, args.token, args.reqParam)
+    }*/
+}
+
+class MainQuery {
+    constructor(){
+        this.qZabbixAPI = new QZabbixAPI()
+
+
+        this.qZabbixAPI()
     }
 }
