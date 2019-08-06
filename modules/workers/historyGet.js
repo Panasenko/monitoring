@@ -29,7 +29,6 @@ class HistoryGet extends Worker {
         this.token = data.token
         this.intervalTime = data.intervalTime
         this.inProgress = data.inProgress
-        this.isError = data.isError
         this.items = data.items
 
         if (this.inProgress && !this.status) {

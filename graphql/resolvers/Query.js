@@ -6,10 +6,18 @@ const HistoryGetController = require('./../../modules/workers/factory')({typeObj
 
 module.exports = {
     zabbixCliFindById: async (parent, args) => {
-        return await ZabbixCli.findById(args._id).populate('items')
+        try {
+            return await ZabbixCli.findById(args._id).populate('items')
+        } catch (e) {
+            throw new Error(e)
+        }
     },
     zabbixCliFind: async (parent, args) => {
-        return await ZabbixCli.find({}).populate('items')
+        try {
+            return await ZabbixCli.find({}).populate('items')
+        } catch (e) {
+            throw new Error(e)
+        }
     },
     getWorkers: () => {
         return HistoryGetController.getWorkers()
