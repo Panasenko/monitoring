@@ -11,7 +11,7 @@ class Worker {
         this._token = args.token
         this._intervalTime = args.intervalTime || 10000
         this._inProgress = args.inProgress || false
-        this._lastTime = args.lastTime || (Date.now() / 1000 | 0) - 3600
+        this._lastTime = args.lastTime || Date.now() / 1000 | 0
         this._isError = false
         this._timerID = null
         this._status = false

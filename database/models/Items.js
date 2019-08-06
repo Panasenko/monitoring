@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const ItemsSchema = new mongoose.Schema({
-    "zabbixCliID": {
+    "zabbixCliIDSchema": {
         type: mongoose.Schema.Types.ObjectId
     },
     "name": {
@@ -25,7 +25,11 @@ const ItemsSchema = new mongoose.Schema({
     },
     "units": {
         type: String
-    }
+    },
+    "triggers": [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Triggers'
+    }]
 
 })
 
