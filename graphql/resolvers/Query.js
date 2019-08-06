@@ -1,14 +1,15 @@
 const _ = require('lodash')
 const zabbixAPI = require('../../modules/zabbix/zabbixAPI')
-const ZabbixCliDB = require('./../../database/controllers/ZabbixCli')
+const mongoose = require('mongoose')
+const ZabbixCli = mongoose.model('ZabbixCli')
 const HistoryGetController = require('./../../modules/workers/factory')({typeObject: "HistoryGet"})
 
 module.exports = {
     zabbixCliFindById: async (parent, args) => {
-        return await ZabbixCliDB.findById(args)
+        return await ZabbixCli.findById(args._id).populate('items')
     },
     zabbixCliFind: async (parent, args) => {
-        return await ZabbixCliDB.find({})
+        return await ZabbixCli.find({}).populate('items')
     },
     getWorkers: () => {
         return HistoryGetController.getWorkers()
@@ -38,4 +39,5 @@ module.exports = {
     items: async (parent, args) => {
         return await zabbixAPI.getItems(args.url, args.token, args.reqParam)
     }
+
 }

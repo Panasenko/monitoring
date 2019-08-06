@@ -1,65 +1,69 @@
 const _ = require('lodash')
+const mongoose = require('mongoose')
+const ZabbixCli = mongoose.model('ZabbixCli')
+const Items = mongoose.model('Items')
 const HistoryGetController = require('./../../modules/workers/factory')({typeObject: "HistoryGet"})
-const ZabbixCliDB = require('./../../database/controllers/ZabbixCli')
-const ItemsDB = require('./../../database/controllers/Items')
 
 module.exports = {
     createZabbixCli: async (parent, {input}) => {
-        let data = await ZabbixCliDB.create(input)
-        await HistoryGetController.createWorkers(data)
-        return await data
+        try {
+            let data = await ZabbixCli.create(input)
+            await HistoryGetController.createWorkers(data)
+            return await data
+        } catch (error) {
+            return error
+        }
     },
-
     updateZabbixCli: async (parent, {_id, input}) => {
-        let updateZabbixCli = await ZabbixCliDB.findByIdAndUpdate(_id, input)
-        await HistoryGetController.updateWorkers(_id)
-        return await updateZabbixCli
+        try {
+             let updateZabbixCli = await ZabbixCli.findByIdAndUpdate(_id, input, {new: true})
+            await HistoryGetController.updateWorkers(_id)
+            return await updateZabbixCli
+        } catch (e) {
+            return e
+        }
     },
-
     deleteZabbixCli: async (parent, {_id}) => {
-        let elementDelete = await ZabbixCliDB.findByIdAndRemove(_id)
-        await ItemsDB.deleteMany({zabbixCliID: _id})
-        await HistoryGetController.deleteWorkers(_id)
-        return await elementDelete
+        try {
+            let elementDelete = await ZabbixCli.findByIdAndRemove(_id)
+            await Items.deleteMany({ zabbixCliID: _id }, function (err) {
+                if(err){
+                    throw new Error(err)
+                }
+            })
+            await HistoryGetController.deleteWorkers(_id)
+            return await elementDelete
+        } catch (e) {
+            return e
+        }
     },
+    createItemsToZabbixCli: async (parent, {_id, input}) => {
+        try{
+            let result = await ZabbixCli.findById(_id)
+            input.zabbixCliID = _id
+            let newItems = await Items.create(input)
+            await result.items.push(newItems._id)
+            await result.save()
 
-    createItemsToZabbixCli: async (parent, {_id, input}) => { //TODO: добавить метод обновления
-        let result = await ZabbixCliDB.findById(_id)
-        input.zabbixCliIDSchema = _id
-        let newItems = await ItemsDB.create(input)
-        await result.items.push(newItems._id)
-        await result.save()
-        HistoryGetController.updateWorkers(_id)
-        return newItems
+            HistoryGetController.updateWorkers(_id)
+
+            return newItems
+        } catch (e) {
+            return e
+        }
     },
 
     deleteItemsToZabbixCli: async (parent, args) => {
-        let result = await ZabbixCliDB.findById(args._id)
-        result.items = await _.remove(result.items, item => {
-            return item === args.child_id
-        })
-        await result.save()
-        await HistoryGetController.updateWorkers(args._id)
-        return await ItemsDB.findByIdAndRemove(args.child_id)
+        try {
+            let result = await ZabbixCli.findById(args._id)
+            result.items = await _.remove(result.items, item => {
+                return item === args.child_id
+            })
+            await result.save()
+            await HistoryGetController.updateWorkers(args._id)
+            return await Items.findByIdAndRemove(args.child_id)
+        } catch (e) {
+            return e
+        }
     },
-/*
-    createTriggersToItems: async (parent, {_id, input}) => { //TODO: добавить метод обновления
-        let result = await ItemsDB.findById(_id)
-        input.zabbixCliIDSchema = _id
-        let newItems = await ItemsDB.create(input)
-        await result.items.push(newItems._id)
-        await result.save()
-        HistoryGetController.updateWorkers(_id)
-        return newItems
-    },
-
-    deleteTriggersToItems: async (parent, args) => {
-        let result = await ZabbixCliDB.findById(args._id)
-        result.items = await _.remove(result.items, item => {
-            return item === args.child_id
-        })
-        await result.save()
-        await HistoryGetController.updateWorkers(args._id)
-        return await ItemsDB.findByIdAndRemove(args.child_id)
-    },*/
 }
