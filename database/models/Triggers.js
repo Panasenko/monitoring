@@ -8,29 +8,37 @@ const TriggersSchema = new mongoose.Schema({
     "description": {
         type: String
     },
-    "url": {
-        type: String,
-        unique: true,
-        required: true
-    },
-    "token": {
+    "itemid": {
         type: String,
         required: true
     },
-    "inProgress": {
-        type: Boolean,
-        default: false
+    "closeTime": {
+        type: Number,
+        required: true
     },
-    "lastTime": {
-        type: Number
+    "disaster": {
+        type: String,
+        default: null
     },
-    "intervalTime": {
-        type: Number
+    "high": {
+        type: String,
+        default: null
     },
-    "items": [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Items'
-    }]
+    "average": {
+        type: String,
+        default: null
+    },
+    "warning": {
+        type: String,
+        default: null
+    },
+    "information": {
+        type: String,
+        default: null
+    },
+    "ItemIDSchema": {
+        type: mongoose.Schema.Types.ObjectId
+    },
 })
 
 mongoose.model('Triggers', TriggersSchema, 'triggers')

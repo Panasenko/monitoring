@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
-const ZabbixCli = mongoose.model('ZabbixCli')
+const Items = mongoose.model('Items')
 
-class ZabbixCliDB {
+class ItemsDB {
     static async find(params) {
         try {
-            return await ZabbixCli.find(params).populate('items')
+            return await Items.find(params).populate('items')
         } catch (e) {
             throw new Error(e)
         }
@@ -12,7 +12,7 @@ class ZabbixCliDB {
 
     static async findById(id){
         try {
-            return await ZabbixCli.findById(id).populate('items')
+            return await Items.findById(id).populate('items')
         } catch (e) {
             throw new Error(e)
         }
@@ -20,7 +20,7 @@ class ZabbixCliDB {
 
     static async create(params){
         try {
-            return await ZabbixCli.create(params)
+            return await Items.create(params)
         } catch (e) {
             throw new Error(e)
         }
@@ -28,7 +28,7 @@ class ZabbixCliDB {
 
     static async findByIdAndUpdate(id,input){
         try {
-            return await ZabbixCli.findByIdAndUpdate(id, input, {new: true})
+            return await Items.findByIdAndUpdate(id, input, {new: true})
         } catch (e) {
             throw new Error(e)
         }
@@ -36,7 +36,15 @@ class ZabbixCliDB {
 
     static async findByIdAndRemove(id){
         try {
-            return await ZabbixCli.findByIdAndRemove(id)
+            return await Items.findByIdAndRemove(id)
+        } catch (e) {
+            throw new Error(e)
+        }
+    }
+
+    static async deleteMany(params){
+        try {
+            return await Items.deleteMany(params)
         } catch (e) {
             throw new Error(e)
         }
@@ -44,4 +52,4 @@ class ZabbixCliDB {
 
 }
 
-module.exports = ZabbixCliDB
+module.exports = ItemsDB
