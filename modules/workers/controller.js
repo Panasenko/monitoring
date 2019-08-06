@@ -20,7 +20,6 @@ class Controller {
             }
         })
 
-        console.log(data[0].items)
         if (_.isArray(data)) {
             _.forEach(data, async (zData) => {
                 return await this.ob.subscribe(new this.newObject(zData))
