@@ -3,8 +3,15 @@ const importQuery = require('./Query')
 const importMutatuion = require('./Mutation')
 const importHosts = require('./Hosts')
 
-module.exports = {
-    Query: importQuery,
-    Mutation: importMutatuion,
-    Hosts: importHosts
+
+class Resolvers{
+    static getResolvers(){
+        return {
+            Query: importQuery,
+            Mutation: importMutatuion,
+            Hosts: importHosts
+        }
+    }
 }
+
+module.exports = Resolvers.getResolvers()
