@@ -11,7 +11,16 @@ class Controller {
     }
 
     async startWorkers() {
-        let data = await ZabbixCli.find({}).populate('items')
+        let data = await ZabbixCli.find({}).populate({
+            path: 'items',
+            model: 'Items',
+            populate: {
+                path: 'triggers',
+                model: 'Triggers'
+            }
+        })
+
+        console.log(data[0].items)
         if (_.isArray(data)) {
             _.forEach(data, async (zData) => {
                 return await this.ob.subscribe(new this.newObject(zData))

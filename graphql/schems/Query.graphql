@@ -67,6 +67,20 @@ type Applications {
     items: [Items]
 }
 
+type Trigger{
+    _id: String,
+    name: String,
+    description: String,
+    itemid: String,
+    closeTime: Int,
+    disaster: String,
+    high: String,
+    average: String,
+    warning: String,
+    information: String,
+    ItemIDSchema: ID
+}
+
 type Items {
     _id: String,
     itemid: String,
@@ -81,6 +95,7 @@ type Items {
     applications: [Applications],
     graphs: [Graphics],
     value_type: String,
-    units: String
+    units: String,
+    triggers: [Trigger]
 }
 

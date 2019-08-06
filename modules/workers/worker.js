@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const ZabbixAPI = require('../zabbix/zabbixAPI')
+const ZabbixAPI = require('../zabbix/zabbixAPI') //TODO: проверить необходимость
 
 
 class Worker {

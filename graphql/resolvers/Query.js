@@ -3,19 +3,33 @@ const zabbixAPI = require('../../modules/zabbix/zabbixAPI')
 const mongoose = require('mongoose')
 const ZabbixCli = mongoose.model('ZabbixCli')
 const HistoryGetController = require('./../../modules/workers/factory')({typeObject: "HistoryGet"})
-const QZabbixAPI = require('./query/qZabbixAPI')
 
 module.exports = {
     zabbixCliFindById: async (parent, args) => {
         try {
-            return await ZabbixCli.findById(args._id).populate('items')
+            return await ZabbixCli.findById(args._id).populate({
+                path: 'items',
+                model: 'Items',
+                populate: {
+                    path: 'triggers',
+                    model: 'Triggers'
+                }
+            })
+            //await res.populate('triggers')
         } catch (e) {
             throw new Error(e)
         }
     },
     zabbixCliFind: async (parent, args) => {
         try {
-            return await ZabbixCli.find({}).populate('items')
+            return await ZabbixCli.find({}).populate({
+                path: 'items',
+                model: 'Items',
+                populate: {
+                    path: 'triggers',
+                    model: 'Triggers'
+                }
+            })
         } catch (e) {
             throw new Error(e)
         }
@@ -23,7 +37,7 @@ module.exports = {
     getWorkers: () => {
         return HistoryGetController.getWorkers()
     },
-    /*token: async (_, args) => {
+    token: async (_, args) => {
         let token = await zabbixAPI.login(args.url, args.input)
         return {
             token: token
@@ -47,15 +61,6 @@ module.exports = {
     },
     items: async (parent, args) => {
         return await zabbixAPI.getItems(args.url, args.token, args.reqParam)
-    }*/
-}
-
-class MainQuery {
-    constructor(){
-        this.qZabbixAPI = new QZabbixAPI()
-
-
-        this.qZabbixAPI()
     }
 
 }

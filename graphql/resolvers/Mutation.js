@@ -2,7 +2,10 @@ const _ = require('lodash')
 const mongoose = require('mongoose')
 const ZabbixCli = mongoose.model('ZabbixCli')
 const Items = mongoose.model('Items')
+const Triggers = mongoose.model('Triggers')
 const HistoryGetController = require('./../../modules/workers/factory')({typeObject: "HistoryGet"})
+
+//TODO: провести рефакторинг, выделить в отдельные классы
 
 module.exports = {
     createZabbixCli: async (parent, {input}) => {
@@ -40,7 +43,7 @@ module.exports = {
     createItemsToZabbixCli: async (parent, {_id, input}) => {
         try{
             let result = await ZabbixCli.findById(_id)
-            input.zabbixCliID = _id
+            input.zabbixCliIDSchema = _id
             let newItems = await Items.create(input)
             await result.items.push(newItems._id)
             await result.save()
@@ -66,4 +69,19 @@ module.exports = {
             return e
         }
     },
+
+    createTriggersToItems: async (parent, {_id, input}) => {
+        try{
+            let result = await Items.findById(_id)
+            input.ItemIDSchema = _id
+            input.itemid = result.itemid
+            let newTriggers = await Triggers.create(input)
+            await result.triggers.push(newTriggers._id)
+            await result.save()
+            return newTriggers
+        } catch (e) {
+            return e
+        }
+    },
+
 }

@@ -5,6 +5,34 @@ type Mutation {
 
     createItemsToZabbixCli(_id: String!, input: ItemsZabbixCliInput): ItemsZabbixCli
     deleteItemsToZabbixCli(_id: String!, child_id: String!): ItemsZabbixCli
+
+    createTriggersToItems(_id: String!, input: TriggerItemsInput): TriggerItems
+}
+
+type TriggerItems{
+    _id: String,
+    name: String,
+    description: String,
+    itemid: String,
+    closeTime: Int,
+    disaster: String,
+    high: String,
+    average: String,
+    warning: String,
+    information: String,
+    ItemIDSchema: ID
+}
+
+input TriggerItemsInput{
+    name: String,
+    description: String,
+    itemid: String,
+    closeTime: Int,
+    disaster: String,
+    high: String,
+    average: String,
+    warning: String,
+    information: String
 }
 
 input ZabbixCliInput{
@@ -26,9 +54,9 @@ input ItemsZabbixCliInput {
     hostid: String,
     name: String,
     description: String,
-    zabbixCliID: String,
     value_type: String,
-    units: String
+    units: String,
+    triggers: [TriggerItemsInput]
 }
 
 type ItemsZabbixCli {
@@ -36,8 +64,9 @@ type ItemsZabbixCli {
     itemid: String,
     hostid: String,
     name: String,
-    zabbixCliID: String,
+    zabbixCliIDSchema: ID,
     description: String,
     value_type: String,
-    units: String
+    units: String,
+    triggers: [TriggerItems]
 }

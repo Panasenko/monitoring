@@ -4,7 +4,7 @@ const Controller = require('./controller')
 
 let objects = []
 
-let Factory = {
+let Factory = { //TODO: выпилить
     getController: (options) => {
         let foundObj = _.find(objects, options)
         if (_.isObject(foundObj)) {
