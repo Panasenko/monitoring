@@ -39,7 +39,6 @@ class HistoryGet extends Worker {
     async callHistoryAPI() {
 
         console.log("Вызов АПИ")
-
         for (let [key, value] of ChangItems.parsItems(this.items).entries()) {
             if (value.length > 0) {
                 let reqParams = {}
