@@ -1,6 +1,9 @@
 const _ = require('lodash')
-const importQuery = require('./Query')
-const importHosts = require('./Hosts')
+
+const ZabbixAPIQuery = require('./queries/query.ZabbixAPI')
+const ZabbixCliQuery = require('./queries/query.ZabbixCli')
+
+const HostsBQ = require('./buildQuery/buildQuery.Hosts')
 
 const ZabbixCliMutation = require('./mutations/mutation.ZabbixCli')
 const ItemsMutation = require('./mutations/mutation.Items')
@@ -9,14 +12,43 @@ const TriggersMutation = require('./mutations/mutation.Triggers')
 
 class Resolvers{
     constructor(){
+        this.ZabbixAPIQuery = new ZabbixAPIQuery()
+        this.ZabbixCliQuery = new ZabbixCliQuery()
+
+        this.HostsBQ = new HostsBQ()
+
         this.ZabbixCliMutation = new ZabbixCliMutation()
         this.ItemsMutation = new ItemsMutation()
         this.TriggersMutation = new TriggersMutation()
 
         return {
-            Query: importQuery,
+            Query: this.query(),
             Mutation: this.mutation(),
-            Hosts: importHosts
+            Hosts: this.buildQuery()
+        }
+    }
+
+    query(){
+        return { //TODO: попробовать объеденять обекты созданные в конструкторах методом Object.assign
+            zabbixCliFindById: this.ZabbixCliQuery.zabbixCliFindById,
+            zabbixCliFind: this.ZabbixCliQuery.zabbixCliFind,
+            getWorkers: this.ZabbixCliQuery.getWorkers,
+
+            token: this.ZabbixAPIQuery.token,
+            version: this.ZabbixAPIQuery.version,
+            hostgroup: this.ZabbixAPIQuery.hostgroup,
+            hosts: this.ZabbixAPIQuery.hosts,
+            applications: this.ZabbixAPIQuery.applications,
+            graphics: this.ZabbixAPIQuery.graphics,
+            items: this.ZabbixAPIQuery.items
+        }
+    }
+
+    buildQuery(){
+        return {
+            applications: this.HostsBQ.applications,
+            graphics: this.HostsBQ.graphics,
+            items: this.HostsBQ.items
         }
     }
 
