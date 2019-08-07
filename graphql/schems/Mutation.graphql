@@ -4,9 +4,10 @@ type Mutation {
     deleteZabbixCli(_id: String!): ZabbixCli
 
     createItemsToZabbixCli(_id: String!, input: ItemsZabbixCliInput): ItemsZabbixCli
-    deleteItemsToZabbixCli(_id: String!, child_id: String!): ItemsZabbixCli
+    deleteItemsToZabbixCli(_id: String!): ItemsZabbixCli
 
     createTriggersToItems(_id: String!, input: TriggerItemsInput): TriggerItems
+    deleteTriggersToItems(_id: String!): TriggerItems
 }
 
 type TriggerItems{
@@ -20,7 +21,8 @@ type TriggerItems{
     average: String,
     warning: String,
     information: String,
-    ItemIDSchema: ID
+    ItemIDSchema: ID,
+    zabbixCliIDSchema: ID
 }
 
 input TriggerItemsInput{

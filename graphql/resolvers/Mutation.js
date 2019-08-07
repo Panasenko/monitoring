@@ -29,11 +29,8 @@ module.exports = {
     deleteZabbixCli: async (parent, {_id}) => {
         try {
             let elementDelete = await ZabbixCli.findByIdAndRemove(_id)
-            await Items.deleteMany({ zabbixCliID: _id }, function (err) {
-                if(err){
-                    throw new Error(err)
-                }
-            })
+            await Items.deleteMany({ zabbixCliIDSchema: _id })
+            await Triggers.deleteMany({ zabbixCliIDSchema: _id })
             await HistoryGetController.deleteWorkers(_id)
             return await elementDelete
         } catch (e) {
@@ -58,13 +55,15 @@ module.exports = {
 
     deleteItemsToZabbixCli: async (parent, args) => {
         try {
-            let result = await ZabbixCli.findById(args._id)
+            let delItems = await Items.findByIdAndRemove(args._id)
+            await Triggers.deleteMany({ ItemIDSchema: delItems.ItemIDSchema })
+            let result = await ZabbixCli.findById(delItems.zabbixCliIDSchema)
             result.items = await _.remove(result.items, item => {
-                return item === args.child_id
+                return item === args._id
             })
             await result.save()
-            await HistoryGetController.updateWorkers(args._id)
-            return await Items.findByIdAndRemove(args.child_id)
+            await HistoryGetController.updateWorkers(delItems.zabbixCliIDSchema)
+            return delItems
         } catch (e) {
             return e
         }
@@ -74,11 +73,28 @@ module.exports = {
         try{
             let result = await Items.findById(_id)
             input.ItemIDSchema = _id
+            input.zabbixCliIDSchema = result.zabbixCliIDSchema
             input.itemid = result.itemid
             let newTriggers = await Triggers.create(input)
             await result.triggers.push(newTriggers._id)
             await result.save()
             return newTriggers
+        } catch (e) {
+            return e
+        }
+    },
+
+    deleteTriggersToItems: async (parent, {_id}) => {
+        try{
+            let delTriggers = await Triggers.findByIdAndRemove(_id)
+
+            let result = await Items.findById(delTriggers.ItemIDSchema)
+            result.triggers = await _.remove(result.triggers, triggers => {
+                return triggers === _id
+            })
+            await result.save()
+            await HistoryGetController.updateWorkers(delTriggers.zabbixCliIDSchema)
+            return delTriggers
         } catch (e) {
             return e
         }
