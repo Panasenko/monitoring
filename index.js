@@ -5,7 +5,7 @@ const { importSchema } = require('graphql-import')
 require('./database/MongoDB')
 require('./modules/workers/factory')
 
-const resolvers = require('./graphql/resolvers/resolvers')
+const resolvers = require('./graphql/resolvers/main.resolvers')
 const typeDefs = importSchema('./graphql/schems/schema.graphql')
 
 async function StartServer() {

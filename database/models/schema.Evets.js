@@ -1,10 +1,8 @@
 const mongoose = require('mongoose')
 
 const EventsSchema = new mongoose.Schema({
-    "eventID": {
-        type: String,
-        required: true,
-        unique: true
+    "TriggersIDSchema": {
+        type: mongoose.Schema.Types.ObjectId
     },
     "description": {
         type: String
@@ -22,11 +20,18 @@ const EventsSchema = new mongoose.Schema({
         required: true
     },
     "eventTimeStart": {
-        type: Number,
+        type: Date,
         required: true
     },
+    "eventTimeUpdate": {
+        type: Date,
+        required: true
+    },
+    "eventTimeNormalized": {
+        type: Date
+    },
     "eventTimeClose": {
-        type: Number
+        type: Date
     },
     "lastClock": {
         type: Number
@@ -39,4 +44,4 @@ const EventsSchema = new mongoose.Schema({
     }]
 })
 
-mongoose.model('Events', EventsSchema, 'events')
+mongoose.model('EventsAlert', EventsSchema, 'eventsAlert')

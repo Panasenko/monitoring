@@ -1,10 +1,6 @@
-const _ = require('lodash')
-
 const ZabbixAPIQuery = require('./queries/query.ZabbixAPI')
 const ZabbixCliQuery = require('./queries/query.ZabbixCli')
-
 const HostsBQ = require('./buildQuery/buildQuery.Hosts')
-
 const ZabbixCliMutation = require('./mutations/mutation.ZabbixCli')
 const ItemsMutation = require('./mutations/mutation.Items')
 const TriggersMutation = require('./mutations/mutation.Triggers')

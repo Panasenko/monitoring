@@ -1,26 +1,35 @@
 const mongoose = require('mongoose')
-//const Events = mongoose.model('Events')
+//const Events = mongoose.model('EventsAlert')
 
 class Event{
     constructor(args){
-        this.eventID = `E${+args.eventTimeStart}_${+args.itemid}`
+        this.triggerID = args.triggerID
         this.itemid = args.itemid
-        this.description = args.description
+        this.description = this.initDescription()
         this.status = args.status
         this.level = args.level
-        this.eventTimeStart = args.eventTimeStart
+        this.eventTimeStart = args.eventTimeStart || null
+
+        this.eventTimeUpdate = args.eventTimeUpdate || null
+        this.eventTimeNormalized = args.eventTimeNormalized || null
+        this.eventTimeClose = args.eventTimeClose || null
         this.lastClock = args.clock
         this.lastValue = args.value
-        this.eventTimeUpdate = null
-        this.eventTimeClose = null
         this.historyChange = []
 
         this.addEvent()
     }
 
+    initDescription(){
+        return `Элемент данных ${this.itemid} в статусе ${this.status}, уровень ${this.level}`
+    }
+
+    seHistory(){
+
+    }
+
     async addEvent(){
         let newData = {}
-        newData.eventID = this.eventID
         newData.itemid = this.itemid
         newData.status = this.status
         newData.level = this.level

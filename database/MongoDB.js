@@ -35,7 +35,7 @@ process.on('SIGINT', function() {
     })
 })
 
-require('./models/ZabbixCli')
-require('./models/Items')
-require('./models/Triggers')
-require('./models/Evets')
+require('./models/schema.ZabbixCli')
+require('./models/schema.Items')
+require('./models/schema.Triggers')
+require('./models/schema.Evets')
