@@ -1,7 +1,3 @@
-const _ = require('lodash')
-const ZabbixAPI = require('../zabbix/zabbixAPI') //TODO: проверить необходимость
-
-
 class Worker {
     constructor(args) {
         this._id = args._id

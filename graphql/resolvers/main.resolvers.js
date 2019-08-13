@@ -28,7 +28,6 @@ class Resolvers{
         return { //TODO: попробовать объеденять обекты созданные в конструкторах методом Object.assign
             zabbixCliFindById: this.ZabbixCliQuery.zabbixCliFindById,
             zabbixCliFind: this.ZabbixCliQuery.zabbixCliFind,
-            getWorkers: this.ZabbixCliQuery.getWorkers,
 
             token: this.ZabbixAPIQuery.token,
             version: this.ZabbixAPIQuery.version,

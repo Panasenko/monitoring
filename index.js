@@ -3,7 +3,7 @@ const Hapi = require('hapi')
 const {ApolloServer} = require('apollo-server-hapi')
 const { importSchema } = require('graphql-import')
 require('./database/MongoDB')
-require('./modules/workers/factory')
+require('./modules/workers/worker.init')
 
 const resolvers = require('./graphql/resolvers/main.resolvers')
 const typeDefs = importSchema('./graphql/schems/schema.graphql')

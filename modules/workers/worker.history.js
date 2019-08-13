@@ -4,7 +4,7 @@ const ZabbixAPI = require('../zabbix/zabbixAPI')
 const ZabbixCliDB = require('../../database/controllers/controll.ZabbixCli')
 
 
-class HistoryGet extends Worker {
+class WorkerHistory extends Worker {
     constructor(args) {
         super(args)
         this._items = args.items || []
@@ -82,4 +82,4 @@ class HistoryGet extends Worker {
 
 }
 
-module.exports = HistoryGet
+module.exports = WorkerHistory

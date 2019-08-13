@@ -2,7 +2,7 @@ const _ = require('lodash')
 const ItemsDB = require('../../../database/controllers/controll.Items')
 const TriggersDB = require('../../../database/controllers/controll.Triggers')
 
-const HistoryGetController = require('./../../../modules/workers/factory')({typeObject: "HistoryGet"})
+const HistoryGetController = require('./../../../modules/workers/worker.init')
 
 class TriggersMutation {
 
