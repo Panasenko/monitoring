@@ -15,6 +15,10 @@ const EventsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    "eventStatus": {
+        type: Boolean,
+        required: true
+    },
     "level": {
         type: String,
         required: true

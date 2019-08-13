@@ -1,9 +1,8 @@
 const _ = require('lodash')
 const Observer = require('./observer')
-const mongoose = require('mongoose')
-const ZabbixCli = mongoose.model('ZabbixCli')
+const ZabbixCliDB = require('../../database/controllers/controll.ZabbixCli')
 
-class Controller {
+class Controller { //TODO: Соеденить с обсервером
     constructor(newObject) {
         this.newObject = newObject
         this.ob = new Observer()
@@ -11,15 +10,7 @@ class Controller {
     }
 
     async startWorkers() {
-        let data = await ZabbixCli.find({}).populate({
-            path: 'items',
-            model: 'Items',
-            populate: {
-                path: 'triggers',
-                model: 'Triggers'
-            }
-        })
-
+        let data = await ZabbixCliDB.find({})
         if (_.isArray(data)) {
             _.forEach(data, async (zData) => {
                 return await this.ob.subscribe(new this.newObject(zData))

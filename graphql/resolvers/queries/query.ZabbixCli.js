@@ -1,37 +1,15 @@
 const _ = require('lodash')
-const mongoose = require('mongoose')
-const ZabbixCli = mongoose.model('ZabbixCli')
+const ZabbixCliDB = require('../../../database/controllers/controll.ZabbixCli')
+
 const HistoryGetController = require('./../../../modules/workers/factory')({typeObject: "HistoryGet"})
 
 class ZabbixCliQuery {
     async zabbixCliFindById(parent, args) {
-        try {
-            return await ZabbixCli.findById(args._id).populate({
-                path: 'items',
-                model: 'Items',
-                populate: {
-                    path: 'triggers',
-                    model: 'Triggers'
-                }
-            })
-        } catch (e) {
-            throw new Error(e)
-        }
+        return await ZabbixCliDB.findById(args._id)
     }
 
     async zabbixCliFind(parent, args) {
-        try {
-            return await ZabbixCli.find({}).populate({
-                path: 'items',
-                model: 'Items',
-                populate: {
-                    path: 'triggers',
-                    model: 'Triggers'
-                }
-            })
-        } catch (e) {
-            throw new Error(e)
-        }
+        return await ZabbixCliDB.find({})
     }
 
     getWorkers() {

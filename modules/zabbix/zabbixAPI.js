@@ -19,7 +19,7 @@ class ZabbixAPI { //TODO: реализовать методы получения
 
     static async getHosts(url, token, reqParam) {
         let params = {
-            output: ["hostid", "host"],
+            output: "extend",
             selectInterfaces: ["interfaceid", "ip"]
         }
         Errors.valid(params, this.constructor.name, "getHosts")
@@ -28,7 +28,7 @@ class ZabbixAPI { //TODO: реализовать методы получения
 
     static async getHostGroup(url, token, reqParam) {
         let params = {
-            "output": ["groupid", "name"],
+            "output": "extend",
             "real_hosts": true,
             "selectHosts": ["hostid", "host", "name", "description", "status"]
         }
@@ -41,8 +41,8 @@ class ZabbixAPI { //TODO: реализовать методы получения
             output: "extend",
             hostids: reqParam.hostid,
             sortfield: "name",
-            selectGraphs: ["graphid", "name"],
-            selectApplications: ["applicationid", "hostid", "name"]
+            selectGraphs: "extend",
+            selectApplications: "extend"
         }
         Errors.valid(params, this.constructor.name, "getItems")
         return await this.callAPI(url, token, "item.get", params)
@@ -72,10 +72,10 @@ class ZabbixAPI { //TODO: реализовать методы получения
 
     static async getGraphics(url, token, reqParam) {
         let params = {
-            "output": ["graphid", "name"],
+            "output": "extend",
             "hostids": reqParam.hostid,
             "sortfield": "name",
-            "selectItems": ["itemid", "hostid", "name", "key_", "lastclock", "lastns", "lastvalue", "prevvalue"],
+            "selectItems": "extend",
             "selectHosts": "hostid"
         }
 
@@ -97,7 +97,7 @@ class ZabbixAPI { //TODO: реализовать методы получения
         let params = {
             output: "extend",
             hostids: reqParam.hostid,
-            selectItems: ["itemid", "hostid", "name", "key_", "lastclock", "lastns", "lastvalue", "prevvalue"]
+            selectItems: "extend"
         }
         Errors.valid(params, this.constructor.name, "getApplications")
         return await this.callAPI(url, token, "application.get", params)

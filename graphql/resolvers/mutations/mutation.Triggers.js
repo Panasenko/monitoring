@@ -1,19 +1,18 @@
 const _ = require('lodash')
-const mongoose = require('mongoose')
-const ZabbixCli = mongoose.model('ZabbixCli')
-const Items = mongoose.model('Items')
-const Triggers = mongoose.model('Triggers')
+const ItemsDB = require('../../../database/controllers/controll.Items')
+const TriggersDB = require('../../../database/controllers/controll.Triggers')
+
 const HistoryGetController = require('./../../../modules/workers/factory')({typeObject: "HistoryGet"})
 
 class TriggersMutation {
 
     async createTriggersToItems(parent, args) {
         try {
-            let result = await Items.findById(args._id)
+            let result = await ItemsDB.findById(args._id)
             args.input.ItemIDSchema = args._id
             args.input.zabbixCliIDSchema = result.zabbixCliIDSchema
             args.input.itemid = result.itemid
-            let newTriggers = await Triggers.create(args.input)
+            let newTriggers = await TriggersDB.create(args.input)
             await result.triggers.push(newTriggers._id)
             await result.save()
             return newTriggers
@@ -24,9 +23,9 @@ class TriggersMutation {
 
     async deleteTriggersToItems(parent, args) {
         try {
-            let delTriggers = await Triggers.findByIdAndRemove(args._id)
+            let delTriggers = await TriggersDB.findByIdAndRemove(args._id)
 
-            let result = await Items.findById(delTriggers.ItemIDSchema)
+            let result = await ItemsDB.findById(delTriggers.ItemIDSchema)
             result.triggers = await _.remove(result.triggers, triggers => {
                 return triggers === args._id
             })

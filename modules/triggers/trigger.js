@@ -10,48 +10,77 @@ class Trigger {
         this.name = args.name
         this.itemid = args.itemid
         this.closeTime = args.closeTime || 5
+
+        this.eventIDSchema = args.eventIDSchema || null
         this.eventStatus = false
-        this.eventObj = null
         this.eventTimeStart = null
+        this.eventTimeNormalized = null
 
         this.disaster = Instruction.init(args.disaster)
         this.high = Instruction.init(args.high)
         this.average = Instruction.init(args.average)
         this.warning = Instruction.init(args.warning)
         this.information = Instruction.init(args.information)
+
+        this.surchEvent(this.eventIDSchema)
     }
+
+    async surchEvent(id){
+        if(id){
+            let event = await Event.findEvent(id)
+            this.eventTimeStart = event.eventTimeStart
+            this.eventTimeNormalized = event.eventTimeNormalized
+            this.eventStatus = event.eventStatus
+        }
+    }
+
+    paramEvent(data, level, status) {
+        data.status = status
+        data.level = level
+        data.triggerID = this._id
+        data.description = `Элемент данных ${this.itemid} в статусе ${this.status}, уровень ${this.level}`
+        return data
+    }
+
 
     workerAlerts(data) {
         if (!this.eventStatus) {
             this.eventStatus = true
-            this.eventObj = new Event(data)
-            this.eventTimeStart = this.eventObj.eventTimeStart
-            return this.eventObj
+            this.eventTimeStart = Time.unixTime()
+            data.itemid = this.itemid
+            data.triggerID = this._id
+            this.eventIDSchema = Event.addEvent(data)._id
         } else {
-            if (!_.isNull(this.eventObj)) {
-                return this.eventObj.updateProperties(data)
+           if (!this.eventIDSchema) {
+                return Event.updateEvent(this.eventIDSchema, data)
             }
             throw new Error("Event object not created")
         }
     }
 
-    closeAlerts(){
-        console.log("none")
-        if (this.eventStatus && this.eventTimeUpdate + (this.closeTime * 60) <= (new Date().getTime() / 1000 | 0)) {
+    closeAlerts(data){
 
-            this.eventStatus = false
-            this.eventTimeStart = null
-            this.eventTimeUpdate = null
-            data.status = "close"
-            data.eventTimeUpdate = this.eventTimeUpdate = this.nowTime()
-            this.eventObj.updateProperties(data)
-            this.eventObj = null
+        if(!this.eventTimeNormalized && this.eventStatus){
+            this.eventTimeNormalized = Time.unixTime()
         }
 
-     /*   switch (true) {
-            case (this.):
+        switch (true) {
+            case (this.eventStatus && this.eventTimeNormalized + (this.closeTime * 60) <= Time.unixTime()):
+                this.eventStatus = false
+                this.eventTimeStart = null
+                this.eventTimeNormalized = null
+                Event.closeEvent(this.eventIDSchema, this.paramEvent(data, "none","close"))
+                this.eventIDSchema = null
+                console.log("none close")
+                break
+            case (this.eventStatus):
+                data.eventTimeNormalized = Time.nowTime()
+                Event.updateEvent(this.eventIDSchema, this.paramEvent(data, "none","normalized"))
+                console.log("none normalized")
+                break
+            default: console.log("none default")
 
-        }*/
+        }
     }
 
     initParams() {
@@ -66,13 +95,6 @@ class Trigger {
         ]
     }
 
-    paramAlert(data, level) {
-        data.itemid = this.itemid
-        data.triggerID = this._id
-        data.status = "active"
-        data.level = level
-        return data
-    }
 
     check(data) {
         let params = this.initParams()
@@ -80,25 +102,25 @@ class Trigger {
         switch (true) {
             case this.disaster(data, ...params):
                 console.log("disaster")
-                this.workerAlerts(this.paramAlert(data, "disaster"))
+                this.workerAlerts(this.paramEvent(data, "disaster", "active"))
                 break
             case this.high(data, ...params):
                 console.log("high")
-                this.workerAlerts(this.paramAlert(data, "high"))
+                this.workerAlerts(this.paramEvent(data, "high", "active"))
                 break
             case this.average(data, ...params):
                 console.log("average")
-                this.workerAlerts(this.paramAlert(data, "average"))
+                this.workerAlerts(this.paramEvent(data, "average", "active"))
                 break
             case this.warning(data, ...params):
                 console.log("warning")
-                this.workerAlerts(this.paramAlert(data, "average"))
+                this.workerAlerts(this.paramEvent(data, "average", "active"))
                 break
             case this.information(data, ...params):
                 console.log("information")
-                this.workerAlerts(this.paramAlert(data, "information"))
+                this.workerAlerts(this.paramEvent(data, "information", "active"))
                 break
-            default: this.closeAlerts()
+            default: this.closeAlerts(data)
         }
     }
 }

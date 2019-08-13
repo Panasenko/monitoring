@@ -1,8 +1,8 @@
 const Worker = require('./worker')
 const ChangItems = require('./changItems')
 const ZabbixAPI = require('../zabbix/zabbixAPI')
-const mongoose = require('mongoose')
-const ZabbixCli = mongoose.model('ZabbixCli')
+const ZabbixCliDB = require('../../database/controllers/controll.ZabbixCli')
+
 
 class HistoryGet extends Worker {
     constructor(args) {
@@ -20,7 +20,7 @@ class HistoryGet extends Worker {
     }
 
     async updateProperties() {
-        let data = await ZabbixCli.findById(this._id).populate('items')
+        let data = await ZabbixCliDB.findById(this._id)
         console.log("Получение данных из БД")
 
         this.name = data.name

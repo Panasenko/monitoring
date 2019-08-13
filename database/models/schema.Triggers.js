@@ -42,6 +42,10 @@ const TriggersSchema = new mongoose.Schema({
     "zabbixCliIDSchema": {
         type: mongoose.Schema.Types.ObjectId
     },
+    "eventIDSchema": {
+        type: mongoose.Schema.Types.ObjectId,
+        default: null
+    },
 })
 
 mongoose.model('Triggers', TriggersSchema, 'triggers')
