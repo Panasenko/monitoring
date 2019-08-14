@@ -45,11 +45,14 @@ class Trigger {
 
     workerAlerts(data) {
         if (!this.eventStatus) {
+
             this.eventStatus = true
             this.eventTimeStart = Time.unixTime()
+            data.eventStatus = this.eventStatus = true
             data.itemid = this.itemid
             data.triggerID = this._id
             this.eventIDSchema = Event.addEvent(data)._id
+
         } else {
            if (!this.eventIDSchema) {
                 return Event.updateEvent(this.eventIDSchema, data)
@@ -125,24 +128,4 @@ class Trigger {
     }
 }
 
-let nobj = {
-    name: "test",
-    _id: "1111111111111",
-    itemid: "434343",
-    closeTime: 5,
-    disaster: "value >= 0.3 && eventTimeStart + 240 <= nowTime",
-    high: "value >= 0.3 && eventTimeStart + 180 <= nowTime",
-    average: "value >= 0.3 && eventTimeStart + 120 <= nowTime",
-    warning: "value >= 0.3 && eventTimeStart + 60 <= nowTime",
-    information: "value >= 0.3"
-}
-
-let obj = new Trigger(nobj)
-let data = {
-    itemid: '23301',
-    clock: '1565036853',
-    value: '0.4551',
-    ns: '545600722'
-}
-
-obj.check(data)
+module.exports = Trigger

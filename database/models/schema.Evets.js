@@ -24,12 +24,10 @@ const EventsSchema = new mongoose.Schema({
         required: true
     },
     "eventTimeStart": {
-        type: Date,
-        required: true
+        type: Date
     },
     "eventTimeUpdate": {
-        type: Date,
-        required: true
+        type: Date
     },
     "eventTimeNormalized": {
         type: Date
@@ -48,4 +46,4 @@ const EventsSchema = new mongoose.Schema({
     }]
 })
 
-mongoose.model('EventsAlert', EventsSchema, 'eventsAlert')
+mongoose.model('EventsAlert', EventsSchema, 'events')

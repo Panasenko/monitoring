@@ -11,6 +11,31 @@ class TriggersControll {
         }
     }
 
+    static async find(args) {
+        try {
+            return await Triggers.find(args)
+        } catch (e) {
+            throw new Error(e)
+        }
+    }
+
+
+    static async findById(args){
+        try{
+            return await Triggers.findById(args)
+        }catch (e) {
+            throw new Error(e)
+        }
+    }
+
+    static async findByIdAndUpdate(id, data){
+        try{
+            return await Triggers.findByIdAndUpdate(id, data, {new: true})
+        }catch (e) {
+            throw new Error(e)
+        }
+    }
+
     static async findByIdAndRemove(id) {
         try {
             return await Triggers.findByIdAndRemove(id)

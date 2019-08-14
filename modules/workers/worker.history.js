@@ -2,6 +2,7 @@ const Worker = require('./worker')
 const ChangItems = require('./changItems')
 const ZabbixAPI = require('../zabbix/zabbixAPI')
 const ZabbixCliDB = require('../../database/controllers/controll.ZabbixCli')
+const TriggerRouter = require('../triggers/trigger.router')
 
 
 class WorkerHistory extends Worker {
@@ -9,6 +10,7 @@ class WorkerHistory extends Worker {
         super(args)
         this._items = args.items || []
         this.updateProperties()
+        this.triggerRouter = new TriggerRouter(this._id)
     }
 
     get items() {
@@ -50,8 +52,8 @@ class WorkerHistory extends Worker {
                     let dataHistory = await ZabbixAPI.getHistory(this._url, this._token, reqParams)
                     this.isError = false
 
-                    if (dataHistory.length > 0) {
-                        console.log(dataHistory)
+                    if (dataHistory.length) {
+                        this.triggerRouter.monitoring(dataHistory)
                     }
                 } catch (e) {
                     console.log(e)
